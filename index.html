@@ -5,15 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mercado Fácil</title>
   <style>
+    * { box-sizing: border-box; }
     body {
       font-family: Arial, sans-serif;
       background: #f0f4f8;
       margin: 0;
-      padding: 20px;
+      padding: 16px;
       color: #222;
     }
     .container {
-      max-width: 600px;
+      max-width: 650px;
       margin: auto;
       background: white;
       padding: 20px;
@@ -21,114 +22,303 @@
       box-shadow: 0 3px 12px #0001;
     }
     h1 { color: #167447; text-align: center; }
-    input, button {
-      box-sizing: border-box;
+    h2 { color: #167447; margin-top: 28px; }
+    input, select, button {
       width: 100%;
       padding: 12px;
       margin: 6px 0;
-      border-radius: 6px;
+      border-radius: 7px;
       font-size: 16px;
     }
-    input { border: 1px solid #ccc; }
+    input, select { border: 1px solid #ccc; background: white; }
     button {
       background: #167447;
       color: white;
       border: 0;
       font-weight: bold;
+      cursor: pointer;
     }
-    .produto {
+    .produto, .venda {
       padding: 12px;
       margin-top: 10px;
       background: #eef8f1;
       border-radius: 8px;
+      overflow-wrap: anywhere;
     }
     .excluir { background: #c0392b; }
-    .resumo { text-align: center; font-weight: bold; }
+    .resumo {
+      text-align: center;
+      font-weight: bold;
+      padding: 12px;
+      background: #e5f4eb;
+      border-radius: 8px;
+    }
+    .aviso { color: #a93226; font-weight: bold; }
+    .vazio { color: #666; }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>🛒 Mercado Fácil</h1>
-    <p class="resumo">Cadastro e controle de produtos</p>
+    <p class="resumo">Cadastro, estoque e controle de vendas</p>
 
-    <h3>Novo produto</h3>
+    <h2>📦 Cadastrar produto</h2>
     <input id="nome" placeholder="Nome do produto">
     <input id="preco" type="number" min="0" step="0.01"
-      placeholder="Preço (R$)">
+      placeholder="Preço de venda (R$)">
     <input id="estoque" type="number" min="0" step="1"
       placeholder="Quantidade em estoque">
     <button onclick="cadastrar()">Cadastrar produto</button>
 
-    <p id="resumo" class="resumo"></p>
-    <h3>Produtos cadastrados</h3>
+    <h2>📋 Produtos cadastrados</h2>
+    <div id="resumoEstoque" class="resumo"></div>
     <div id="lista"></div>
+
+    <h2>🧾 Registrar venda</h2>
+    <label for="produtoVenda">Escolha o produto</label>
+    <select id="produtoVenda"></select>
+    <input id="quantidadeVenda" type="number" min="1" step="1"
+      placeholder="Quantidade vendida">
+    <div id="previsao" class="resumo">Selecione um produto</div>
+    <button onclick="registrarVenda()">Registrar venda</button>
+    <p id="mensagem" role="status"></p>
+
+    <h2>💰 Resumo das vendas</h2>
+    <div id="totalVendido" class="resumo"></div>
+
+    <h2>📚 Histórico de vendas</h2>
+    <div id="historico"></div>
   </div>
 
   <script>
     let produtos = JSON.parse(
       localStorage.getItem("mercadoFacil") || "[]"
     );
+    let vendas = JSON.parse(
+      localStorage.getItem("mercadoFacilVendas") || "[]"
+    );
 
-    function salvar() {
+    function dinheiro(valor) {
+      return valor.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+      });
+    }
+
+    function salvarProdutos() {
       localStorage.setItem("mercadoFacil", JSON.stringify(produtos));
-      mostrar();
+    }
+
+    function salvarVendas() {
+      localStorage.setItem("mercadoFacilVendas", JSON.stringify(vendas));
     }
 
     function cadastrar() {
       const nome = document.getElementById("nome").value.trim();
-      const preco = Number(document.getElementById("preco").value);
-      const estoque = Number(document.getElementById("estoque").value);
+      const precoCampo = document.getElementById("preco").value;
+      const estoqueCampo = document.getElementById("estoque").value;
+      const preco = Number(precoCampo);
+      const estoque = Number(estoqueCampo);
 
-      if (!nome || document.getElementById("preco").value === "" ||
-          document.getElementById("estoque").value === "" ||
-          preco < 0 || estoque < 0 || !Number.isInteger(estoque)) {
-        alert("Preencha os campos corretamente.");
+      if (!nome || precoCampo === "" || estoqueCampo === "" ||
+          !Number.isFinite(preco) || preco < 0 ||
+          !Number.isInteger(estoque) || estoque < 0) {
+        alert("Preencha todos os campos corretamente.");
         return;
       }
 
       produtos.push({ nome, preco, estoque });
-      salvar();
+      salvarProdutos();
 
       document.getElementById("nome").value = "";
       document.getElementById("preco").value = "";
       document.getElementById("estoque").value = "";
+      atualizar();
+      alert("Produto cadastrado com sucesso!");
     }
 
     function excluir(indice) {
-      produtos.splice(indice, 1);
-      salvar();
+      const nome = produtos[indice].nome;
+      const temVenda = vendas.some(v => v.produto === nome);
+
+      if (temVenda) {
+        alert("Este produto tem vendas no histórico. Não é possível excluí-lo.");
+        return;
+      }
+
+      if (confirm("Deseja excluir este produto?")) {
+        produtos.splice(indice, 1);
+        salvarProdutos();
+        atualizar();
+      }
     }
 
-    function mostrar() {
+    function registrarVenda() {
+      const indice = Number(document.getElementById("produtoVenda").value);
+      const quantidade = Number(
+        document.getElementById("quantidadeVenda").value
+      );
+      const mensagem = document.getElementById("mensagem");
+
+      mensagem.textContent = "";
+      mensagem.className = "";
+
+      if (!Number.isInteger(indice) || !produtos[indice]) {
+        mensagem.textContent = "Cadastre ou selecione um produto primeiro.";
+        mensagem.className = "aviso";
+        return;
+      }
+
+      const campo = document.getElementById("quantidadeVenda");
+      if (campo.value === "" || !Number.isInteger(quantidade) ||
+          quantidade < 1) {
+        mensagem.textContent = "Informe uma quantidade inteira maior que zero.";
+        mensagem.className = "aviso";
+        return;
+      }
+
+      const produto = produtos[indice];
+
+      if (quantidade > produto.estoque) {
+        mensagem.textContent =
+          "Estoque insuficiente. Disponível: " + produto.estoque + ".";
+        mensagem.className = "aviso";
+        return;
+      }
+
+      const total = Math.round(produto.preco * quantidade * 100) / 100;
+
+      vendas.unshift({
+        produto: produto.nome,
+        quantidade: quantidade,
+        precoUnitario: produto.preco,
+        total: total,
+        data: new Date().toLocaleString("pt-BR")
+      });
+
+      produto.estoque -= quantidade;
+      salvarProdutos();
+      salvarVendas();
+
+      campo.value = "";
+      mensagem.textContent = "Venda registrada com sucesso!";
+      atualizar();
+    }
+
+    function atualizarPrevisao() {
+      const campo = document.getElementById("produtoVenda");
+      const quantidade = Number(
+        document.getElementById("quantidadeVenda").value
+      );
+      const indice = Number(campo.value);
+      const previsao = document.getElementById("previsao");
+
+      if (!produtos[indice]) {
+        previsao.textContent = "Cadastre um produto para iniciar as vendas.";
+        return;
+      }
+
+      if (!Number.isInteger(quantidade) || quantidade < 1) {
+        previsao.textContent =
+          "Preço unitário: " + dinheiro(produtos[indice].preco);
+        return;
+      }
+
+      previsao.textContent =
+        "Total desta venda: " +
+        dinheiro(produtos[indice].preco * quantidade);
+    }
+
+    function adicionarTexto(pai, tag, texto) {
+      const elemento = document.createElement(tag);
+      elemento.textContent = texto;
+      pai.appendChild(elemento);
+      return elemento;
+    }
+
+    function atualizar() {
       const lista = document.getElementById("lista");
-      lista.innerHTML = "";
+      const resumo = document.getElementById("resumoEstoque");
+      const seletor = document.getElementById("produtoVenda");
+      const historico = document.getElementById("historico");
+
+      lista.replaceChildren();
+      seletor.replaceChildren();
+      historico.replaceChildren();
 
       let unidades = 0;
+
       produtos.forEach((p, i) => {
         unidades += p.estoque;
         const item = document.createElement("div");
         item.className = "produto";
 
-        const descricao = document.createElement("p");
-        descricao.textContent = p.nome + " — R$ " +
-          p.preco.toFixed(2).replace(".", ",") +
-          " | Estoque: " + p.estoque;
+        adicionarTexto(
+          item, "p",
+          p.nome + " — " + dinheiro(p.preco) +
+          " | Estoque: " + p.estoque
+        );
 
-        const botao = document.createElement("button");
+        const botao = adicionarTexto(item, "button", "Excluir produto");
         botao.className = "excluir";
-        botao.textContent = "Excluir produto";
         botao.onclick = () => excluir(i);
-
-        item.append(descricao, botao);
         lista.appendChild(item);
+
+        const opcao = document.createElement("option");
+        opcao.value = String(i);
+        opcao.textContent =
+          p.nome + " — " + dinheiro(p.preco) +
+          " (Estoque: " + p.estoque + ")";
+        opcao.disabled = p.estoque < 1;
+        seletor.appendChild(opcao);
       });
 
-      document.getElementById("resumo").textContent =
+      resumo.textContent =
         "Produtos: " + produtos.length +
         " | Unidades em estoque: " + unidades;
+
+      if (produtos.length === 0) {
+        const opcao = document.createElement("option");
+        opcao.textContent = "Cadastre um produto primeiro";
+        opcao.value = "";
+        seletor.appendChild(opcao);
+      }
+
+      let totalGeral = 0;
+      vendas.forEach(v => totalGeral += v.total);
+
+      document.getElementById("totalVendido").textContent =
+        "Total vendido: " + dinheiro(totalGeral) +
+        " | Vendas registradas: " + vendas.length;
+
+      if (vendas.length === 0) {
+        adicionarTexto(historico, "p", "Nenhuma venda registrada ainda.")
+          .className = "vazio";
+      } else {
+        vendas.forEach(v => {
+          const item = document.createElement("div");
+          item.className = "venda";
+          adicionarTexto(item, "strong", v.produto);
+          adicionarTexto(
+            item, "p",
+            "Quantidade: " + v.quantidade +
+            " × " + dinheiro(v.precoUnitario)
+          );
+          adicionarTexto(item, "p", "Total: " + dinheiro(v.total));
+          adicionarTexto(item, "small", v.data);
+          historico.appendChild(item);
+        });
+      }
+
+      atualizarPrevisao();
     }
 
-    mostrar();
+    document.getElementById("produtoVenda")
+      .addEventListener("change", atualizarPrevisao);
+    document.getElementById("quantidadeVenda")
+      .addEventListener("input", atualizarPrevisao);
+
+    atualizar();
   </script>
 </body>
 </html>
