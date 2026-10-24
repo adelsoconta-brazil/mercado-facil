@@ -113,6 +113,35 @@
 
     .vazio { color: #64748b; padding: 12px 0; }
 
+    .alerta-geral {
+      padding: 14px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #f59e0b;
+    }
+
+    .alerta-geral strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .estoque-baixo {
+      color: #b45309;
+      font-weight: bold;
+    }
+
+    .estoque-zero {
+      color: #dc2626;
+      font-weight: bold;
+    }
+
+    .estoque-normal {
+      color: #15803d;
+      font-weight: bold;
+    }
+
     .venda {
       border-left: 4px solid #0f766e;
       padding: 12px;
@@ -147,6 +176,8 @@
     <h1>🛒 Mercado Fácil</h1>
     <p>Controle simples de produtos, estoque e vendas</p>
   </header>
+
+  <div id="alertaGeral" class="alerta-geral" hidden></div>
 
   <div class="resumos">
     <div class="card">
@@ -194,12 +225,13 @@
 
     <p class="vazio">
       Se o produto já existir com o mesmo nome e preço,
-      a quantidade será somada ao estoque.
+      a nova quantidade será somada ao estoque.
     </p>
   </section>
 
   <section>
     <h2>📋 Produtos e estoque</h2>
+    <p class="vazio">⚠️ Estoque baixo: 5 unidades ou menos.</p>
 
     <input id="buscaProduto" class="busca"
       placeholder="🔎 Buscar produto...">
@@ -265,6 +297,7 @@
 <script>
   const CHAVE_PRODUTOS = "mercadoFacil";
   const CHAVE_VENDAS = "mercadoFacilVendas";
+  const LIMITE_ESTOQUE_BAIXO = 5;
 
   function lerDados(chave) {
     try {
@@ -350,7 +383,6 @@
     };
   });
 
-  // Garante IDs únicos nos produtos já cadastrados.
   const idsUsados = new Set();
   produtos = produtos.map(p => {
     if (!p.id || idsUsados.has(String(p.id))) {
@@ -394,6 +426,41 @@
       dinheiro(totalHoje);
   }
 
+  function atualizarAlertaEstoque() {
+    const alerta = document.getElementById("alertaGeral");
+
+    const zerados = produtos.filter(p => p.estoque === 0);
+    const baixos = produtos.filter(p =>
+      p.estoque > 0 && p.estoque <= LIMITE_ESTOQUE_BAIXO
+    );
+
+    if (zerados.length === 0 && baixos.length === 0) {
+      alerta.hidden = true;
+      alerta.innerHTML = "";
+      return;
+    }
+
+    alerta.hidden = false;
+
+    let html = "<strong>⚠️ Atenção ao estoque!</strong>";
+
+    if (zerados.length > 0) {
+      html += "<p><b>🔴 Produtos sem estoque:</b> " +
+        zerados.map(p => escapar(p.nome)).join(", ") +
+        ".</p>";
+    }
+
+    if (baixos.length > 0) {
+      html += "<p><b>🟠 Produtos com estoque baixo:</b> " +
+        baixos.map(p =>
+          escapar(p.nome) + " (" + p.estoque + " unidade(s))"
+        ).join(", ") +
+        ".</p>";
+    }
+
+    alerta.innerHTML = html;
+  }
+
   function mostrarProdutos() {
     const busca = document.getElementById("buscaProduto")
       .value.trim().toLocaleLowerCase("pt-BR");
@@ -405,20 +472,33 @@
       p.nome.toLocaleLowerCase("pt-BR").includes(busca)
     );
 
-    lista.innerHTML = filtrados.map(p => `
-      <tr>
-        <td>${escapar(p.nome)}</td>
-        <td>${dinheiro(p.preco)}</td>
-        <td>${p.estoque}</td>
-        <td>${dinheiro(p.preco * p.estoque)}</td>
-        <td>
-          <button type="button" class="btn-editar"
-            data-editar="${escapar(p.id)}">Editar</button>
-          <button type="button" class="btn-excluir"
-            data-excluir="${escapar(p.id)}">Excluir</button>
-        </td>
-      </tr>
-    `).join("");
+    lista.innerHTML = filtrados.map(p => {
+      let classeEstoque = "estoque-normal";
+      let textoEstoque = String(p.estoque);
+
+      if (p.estoque === 0) {
+        classeEstoque = "estoque-zero";
+        textoEstoque = "ZERADO";
+      } else if (p.estoque <= LIMITE_ESTOQUE_BAIXO) {
+        classeEstoque = "estoque-baixo";
+        textoEstoque += " ⚠️";
+      }
+
+      return `
+        <tr>
+          <td>${escapar(p.nome)}</td>
+          <td>${dinheiro(p.preco)}</td>
+          <td class="${classeEstoque}">${textoEstoque}</td>
+          <td>${dinheiro(p.preco * p.estoque)}</td>
+          <td>
+            <button type="button" class="btn-editar"
+              data-editar="${escapar(p.id)}">Editar</button>
+            <button type="button" class="btn-excluir"
+              data-excluir="${escapar(p.id)}">Excluir</button>
+          </td>
+        </tr>
+      `;
+    }).join("");
 
     mensagem.textContent = filtrados.length
       ? ""
@@ -447,7 +527,7 @@
     if (nome === null) return;
 
     if (!nome.trim()) {
-      alert("O nome do produto não pode ficar vazio.");
+      alert("O nome não pode ficar vazio.");
       return;
     }
 
@@ -477,14 +557,12 @@
       return;
     }
 
-    const confirmar = confirm(
+    if (!confirm(
       "Confirmar alterações?\n\n" +
       `Produto: ${produto.nome} → ${nome.trim()}\n` +
       `Preço: ${dinheiro(produto.preco)} → ${dinheiro(preco)}\n` +
       `Estoque: ${produto.estoque} → ${estoque}`
-    );
-
-    if (!confirmar) return;
+    )) return;
 
     produto.nome = nome.trim();
     produto.preco = preco;
@@ -566,6 +644,7 @@
   function atualizarTela() {
     salvar();
     atualizarResumo();
+    atualizarAlertaEstoque();
     mostrarProdutos();
     mostrarVendas();
   }
@@ -593,15 +672,13 @@
       `Produto: ${venda.nome}\n` +
       `Quantidade: ${venda.quantidade}\n` +
       `Valor: ${dinheiro(venda.total)}\n\n` +
-      "O total vendido será recalculado. Se possível, as unidades voltarão ao estoque."
+      "Se o produto ainda estiver cadastrado, as unidades voltarão ao estoque."
     )) return;
 
     let produto = venda.produtoId
       ? produtos.find(p => String(p.id) === String(venda.produtoId))
       : null;
 
-    // Para vendas antigas sem ID, só devolve unidades se
-    // houver uma correspondência única de nome e preço.
     if (!venda.produtoId) {
       const correspondencias = produtos.filter(p =>
         p.nome.toLocaleLowerCase("pt-BR") ===
@@ -727,7 +804,6 @@
   document.getElementById("quantidadeVenda")
     .addEventListener("input", atualizarPrecoVenda);
 
-  // Inicializa o sistema sem apagar os dados existentes.
   atualizarTela();
 </script>
 </body>
