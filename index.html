@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -7,19 +8,19 @@
   <style>
     * { box-sizing: border-box; }
     body {
-      font-family: Arial, sans-serif;
-      background: #f0f4f8;
       margin: 0;
       padding: 16px;
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
       color: #222;
     }
     .container {
-      max-width: 650px;
+      max-width: 700px;
       margin: auto;
-      background: white;
       padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 3px 12px #0001;
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 3px 14px #0001;
     }
     h1 { color: #167447; text-align: center; }
     h2 { color: #167447; margin-top: 28px; }
@@ -30,37 +31,43 @@
       border-radius: 7px;
       font-size: 16px;
     }
-    input, select { border: 1px solid #ccc; background: white; }
+    input, select {
+      border: 1px solid #ccc;
+      background: white;
+    }
     button {
+      border: 0;
       background: #167447;
       color: white;
-      border: 0;
       font-weight: bold;
       cursor: pointer;
     }
+    .secundario { background: #526579; }
+    .excluir { background: #b83232; }
     .produto, .venda {
       padding: 12px;
       margin-top: 10px;
-      background: #eef8f1;
       border-radius: 8px;
+      background: #eef8f1;
       overflow-wrap: anywhere;
     }
-    .excluir { background: #c0392b; }
     .resumo {
+      padding: 14px;
+      margin: 10px 0;
+      border-radius: 8px;
+      background: #e5f4eb;
       text-align: center;
       font-weight: bold;
-      padding: 12px;
-      background: #e5f4eb;
-      border-radius: 8px;
     }
-    .aviso { color: #a93226; font-weight: bold; }
+    .aviso { color: #a93226; }
     .vazio { color: #666; }
+    .subtitulo { text-align: center; color: #526579; }
   </style>
 </head>
 <body>
-  <div class="container">
+  <main class="container">
     <h1>🛒 Mercado Fácil</h1>
-    <p class="resumo">Cadastro, estoque e controle de vendas</p>
+    <p class="subtitulo">Cadastro, estoque e controle de vendas</p>
 
     <h2>📦 Cadastrar produto</h2>
     <input id="nome" placeholder="Nome do produto">
@@ -69,6 +76,9 @@
     <input id="estoque" type="number" min="0" step="1"
       placeholder="Quantidade em estoque">
     <button onclick="cadastrar()">Cadastrar produto</button>
+    <button class="secundario" onclick="limparFormulario()">
+      Limpar campos
+    </button>
 
     <h2>📋 Produtos cadastrados</h2>
     <div id="resumoEstoque" class="resumo"></div>
@@ -79,27 +89,35 @@
     <select id="produtoVenda"></select>
     <input id="quantidadeVenda" type="number" min="1" step="1"
       placeholder="Quantidade vendida">
-    <div id="previsao" class="resumo">Selecione um produto</div>
+    <div id="previsao" class="resumo">
+      Selecione um produto
+    </div>
     <button onclick="registrarVenda()">Registrar venda</button>
     <p id="mensagem" role="status"></p>
 
     <h2>💰 Resumo das vendas</h2>
     <div id="totalVendido" class="resumo"></div>
+    <div id="relatorioHoje" class="resumo"></div>
 
     <h2>📚 Histórico de vendas</h2>
     <div id="historico"></div>
-  </div>
+  </main>
 
   <script>
-    let produtos = JSON.parse(
-      localStorage.getItem("mercadoFacil") || "[]"
-    );
-    let vendas = JSON.parse(
-      localStorage.getItem("mercadoFacilVendas") || "[]"
-    );
+    function lerDados(chave) {
+      try {
+        const dados = JSON.parse(localStorage.getItem(chave) || "[]");
+        return Array.isArray(dados) ? dados : [];
+      } catch (erro) {
+        return [];
+      }
+    }
+
+    let produtos = lerDados("mercadoFacil");
+    let vendas = lerDados("mercadoFacilVendas");
 
     function dinheiro(valor) {
-      return valor.toLocaleString("pt-BR", {
+      return Number(valor).toLocaleString("pt-BR", {
         style: "currency",
         currency: "BRL"
       });
@@ -113,26 +131,39 @@
       localStorage.setItem("mercadoFacilVendas", JSON.stringify(vendas));
     }
 
+    function limparFormulario() {
+      document.getElementById("nome").value = "";
+      document.getElementById("preco").value = "";
+      document.getElementById("estoque").value = "";
+      document.getElementById("nome").focus();
+    }
+
     function cadastrar() {
       const nome = document.getElementById("nome").value.trim();
-      const precoCampo = document.getElementById("preco").value;
-      const estoqueCampo = document.getElementById("estoque").value;
-      const preco = Number(precoCampo);
-      const estoque = Number(estoqueCampo);
+      const campoPreco = document.getElementById("preco").value;
+      const campoEstoque = document.getElementById("estoque").value;
+      const preco = Number(campoPreco);
+      const estoque = Number(campoEstoque);
 
-      if (!nome || precoCampo === "" || estoqueCampo === "" ||
+      if (!nome || campoPreco === "" || campoEstoque === "" ||
           !Number.isFinite(preco) || preco < 0 ||
           !Number.isInteger(estoque) || estoque < 0) {
         alert("Preencha todos os campos corretamente.");
         return;
       }
 
-      produtos.push({ nome, preco, estoque });
-      salvarProdutos();
+      const duplicado = produtos.some(p =>
+        p.nome.trim().toLowerCase() === nome.toLowerCase()
+      );
 
-      document.getElementById("nome").value = "";
-      document.getElementById("preco").value = "";
-      document.getElementById("estoque").value = "";
+      if (duplicado) {
+        alert("Esse nome já está cadastrado. Escolha outro nome.");
+        return;
+      }
+
+      produtos.push({ nome: nome, preco: preco, estoque: estoque });
+      salvarProdutos();
+      limparFormulario();
       atualizar();
       alert("Produto cadastrado com sucesso!");
     }
@@ -142,7 +173,7 @@
       const temVenda = vendas.some(v => v.produto === nome);
 
       if (temVenda) {
-        alert("Este produto tem vendas no histórico. Não é possível excluí-lo.");
+        alert("Há vendas desse produto no histórico. Não é possível excluí-lo.");
         return;
       }
 
@@ -154,24 +185,23 @@
     }
 
     function registrarVenda() {
-      const indice = Number(document.getElementById("produtoVenda").value);
-      const quantidade = Number(
-        document.getElementById("quantidadeVenda").value
-      );
+      const campo = document.getElementById("produtoVenda");
+      const quantidadeCampo = document.getElementById("quantidadeVenda");
+      const indice = Number(campo.value);
+      const quantidade = Number(quantidadeCampo.value);
       const mensagem = document.getElementById("mensagem");
 
       mensagem.textContent = "";
       mensagem.className = "";
 
-      if (!Number.isInteger(indice) || !produtos[indice]) {
-        mensagem.textContent = "Cadastre ou selecione um produto primeiro.";
+      if (campo.value === "" || !produtos[indice]) {
+        mensagem.textContent = "Cadastre ou selecione um produto.";
         mensagem.className = "aviso";
         return;
       }
 
-      const campo = document.getElementById("quantidadeVenda");
-      if (campo.value === "" || !Number.isInteger(quantidade) ||
-          quantidade < 1) {
+      if (quantidadeCampo.value === "" ||
+          !Number.isInteger(quantidade) || quantidade < 1) {
         mensagem.textContent = "Informe uma quantidade inteira maior que zero.";
         mensagem.className = "aviso";
         return;
@@ -187,46 +217,65 @@
       }
 
       const total = Math.round(produto.preco * quantidade * 100) / 100;
+      const agora = new Date();
 
       vendas.unshift({
         produto: produto.nome,
         quantidade: quantidade,
         precoUnitario: produto.preco,
         total: total,
-        data: new Date().toLocaleString("pt-BR")
+        data: agora.toLocaleString("pt-BR"),
+        dataISO: agora.getFullYear() + "-" +
+          String(agora.getMonth() + 1).padStart(2, "0") + "-" +
+          String(agora.getDate()).padStart(2, "0")
       });
 
       produto.estoque -= quantidade;
       salvarProdutos();
       salvarVendas();
 
-      campo.value = "";
+      quantidadeCampo.value = "";
       mensagem.textContent = "Venda registrada com sucesso!";
       atualizar();
     }
 
+    function dataDaVenda(venda) {
+      if (venda.dataISO) return venda.dataISO;
+
+      // Compatibilidade com vendas antigas no formato brasileiro.
+      const resultado = (venda.data || "").match(
+        /^(\d{2})\/(\d{2})\/(\d{4})/
+      );
+
+      if (resultado) {
+        return resultado[3] + "-" + resultado[2] + "-" + resultado[1];
+      }
+
+      return "";
+    }
+
     function atualizarPrevisao() {
       const campo = document.getElementById("produtoVenda");
-      const quantidade = Number(
-        document.getElementById("quantidadeVenda").value
-      );
-      const indice = Number(campo.value);
+      const quantidadeCampo = document.getElementById("quantidadeVenda");
       const previsao = document.getElementById("previsao");
+      const indice = Number(campo.value);
+      const quantidade = Number(quantidadeCampo.value);
 
-      if (!produtos[indice]) {
-        previsao.textContent = "Cadastre um produto para iniciar as vendas.";
+      if (campo.value === "" || !produtos[indice]) {
+        previsao.textContent = "Cadastre um produto para começar.";
         return;
       }
 
-      if (!Number.isInteger(quantidade) || quantidade < 1) {
-        previsao.textContent =
-          "Preço unitário: " + dinheiro(produtos[indice].preco);
+      const produto = produtos[indice];
+
+      if (quantidadeCampo.value === "" ||
+          !Number.isInteger(quantidade) || quantidade < 1) {
+        previsao.textContent = "Preço unitário: " + dinheiro(produto.preco);
         return;
       }
 
-      previsao.textContent =
-        "Total desta venda: " +
-        dinheiro(produtos[indice].preco * quantidade);
+      previsao.textContent = "Total desta venda: " +
+        dinheiro(produto.preco * quantidade);
     }
 
     function adicionarTexto(pai, tag, texto) {
@@ -238,7 +287,7 @@
 
     function atualizar() {
       const lista = document.getElementById("lista");
-      const resumo = document.getElementById("resumoEstoque");
+      const resumoEstoque = document.getElementById("resumoEstoque");
       const seletor = document.getElementById("produtoVenda");
       const historico = document.getElementById("historico");
 
@@ -250,14 +299,13 @@
 
       produtos.forEach((p, i) => {
         unidades += p.estoque;
+
         const item = document.createElement("div");
         item.className = "produto";
 
-        adicionarTexto(
-          item, "p",
+        adicionarTexto(item, "p",
           p.nome + " — " + dinheiro(p.preco) +
-          " | Estoque: " + p.estoque
-        );
+          " | Estoque: " + p.estoque);
 
         const botao = adicionarTexto(item, "button", "Excluir produto");
         botao.className = "excluir";
@@ -266,30 +314,42 @@
 
         const opcao = document.createElement("option");
         opcao.value = String(i);
-        opcao.textContent =
-          p.nome + " — " + dinheiro(p.preco) +
+        opcao.textContent = p.nome + " — " + dinheiro(p.preco) +
           " (Estoque: " + p.estoque + ")";
         opcao.disabled = p.estoque < 1;
         seletor.appendChild(opcao);
       });
 
-      resumo.textContent =
-        "Produtos: " + produtos.length +
+      resumoEstoque.textContent = "Produtos: " + produtos.length +
         " | Unidades em estoque: " + unidades;
 
       if (produtos.length === 0) {
         const opcao = document.createElement("option");
-        opcao.textContent = "Cadastre um produto primeiro";
         opcao.value = "";
+        opcao.textContent = "Cadastre um produto primeiro";
         seletor.appendChild(opcao);
       }
 
       let totalGeral = 0;
-      vendas.forEach(v => totalGeral += v.total);
+      vendas.forEach(v => totalGeral += Number(v.total) || 0);
 
       document.getElementById("totalVendido").textContent =
         "Total vendido: " + dinheiro(totalGeral) +
         " | Vendas registradas: " + vendas.length;
+
+      const hoje = new Date();
+      const hojeISO = hoje.getFullYear() + "-" +
+        String(hoje.getMonth() + 1).padStart(2, "0") + "-" +
+        String(hoje.getDate()).padStart(2, "0");
+
+      const vendasHoje = vendas.filter(v => dataDaVenda(v) === hojeISO);
+      const totalHoje = vendasHoje.reduce(
+        (soma, v) => soma + (Number(v.total) || 0), 0
+      );
+
+      document.getElementById("relatorioHoje").textContent =
+        "Hoje: " + dinheiro(totalHoje) +
+        " | Vendas de hoje: " + vendasHoje.length;
 
       if (vendas.length === 0) {
         adicionarTexto(historico, "p", "Nenhuma venda registrada ainda.")
@@ -299,13 +359,11 @@
           const item = document.createElement("div");
           item.className = "venda";
           adicionarTexto(item, "strong", v.produto);
-          adicionarTexto(
-            item, "p",
-            "Quantidade: " + v.quantidade +
-            " × " + dinheiro(v.precoUnitario)
-          );
+          adicionarTexto(item, "p",
+            "Quantidade: " + v.quantidade + " × " +
+            dinheiro(v.precoUnitario));
           adicionarTexto(item, "p", "Total: " + dinheiro(v.total));
-          adicionarTexto(item, "small", v.data);
+          adicionarTexto(item, "small", v.data || "Data não informada");
           historico.appendChild(item);
         });
       }
