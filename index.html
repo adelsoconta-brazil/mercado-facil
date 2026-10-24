@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -6,171 +5,127 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mercado Fácil</title>
   <style>
-    * { box-sizing: border-box; }
     body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
       margin: 0;
       padding: 20px;
-      font-family: Arial, sans-serif;
-      background: #f1f5f9;
-      color: #172b4d;
+      color: #222;
     }
-    header {
-      background: #17365d;
-      color: white;
-      padding: 24px;
-      border-radius: 16px;
-      text-align: center;
-    }
-    main { max-width: 800px; margin: 20px auto; }
-    section {
+    .container {
+      max-width: 600px;
+      margin: auto;
       background: white;
-      margin: 16px 0;
       padding: 20px;
-      border-radius: 14px;
-      box-shadow: 0 3px 12px #0000000c;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px #0001;
     }
+    h1 { color: #167447; text-align: center; }
     input, button {
+      box-sizing: border-box;
       width: 100%;
       padding: 12px;
       margin: 6px 0;
-      border-radius: 8px;
+      border-radius: 6px;
       font-size: 16px;
     }
-    input { border: 1px solid #cbd5e1; }
+    input { border: 1px solid #ccc; }
     button {
-      background: #2563eb;
+      background: #167447;
       color: white;
       border: 0;
       font-weight: bold;
-      cursor: pointer;
     }
     .produto {
-      padding: 12px 0;
-      border-bottom: 1px solid #e2e8f0;
+      padding: 12px;
+      margin-top: 10px;
+      background: #eef8f1;
+      border-radius: 8px;
     }
-    .produto button { background: #b42332; }
-    .resumo { font-size: 18px; font-weight: bold; }
+    .excluir { background: #c0392b; }
+    .resumo { text-align: center; font-weight: bold; }
   </style>
 </head>
 <body>
-  <header>
+  <div class="container">
     <h1>🛒 Mercado Fácil</h1>
-    <p>Sistema de controle de produtos e vendas</p>
-  </header>
+    <p class="resumo">Cadastro e controle de produtos</p>
 
-  <main>
-    <section>
-      <h2>📦 Cadastrar produto</h2>
-      <input id="nome" placeholder="Nome do produto">
-      <input id="preco" type="number" min="0.01" step="0.01" placeholder="Preço (R$)">
-      <input id="estoque" type="number" min="0" step="1" placeholder="Quantidade em estoque">
-      <button onclick="cadastrar()">Cadastrar produto</button>
-    </section>
+    <h3>Novo produto</h3>
+    <input id="nome" placeholder="Nome do produto">
+    <input id="preco" type="number" min="0" step="0.01"
+      placeholder="Preço (R$)">
+    <input id="estoque" type="number" min="0" step="1"
+      placeholder="Quantidade em estoque">
+    <button onclick="cadastrar()">Cadastrar produto</button>
 
-    <section>
-      <h2>📊 Resumo</h2>
-      <p class="resumo" id="resumo">Produtos cadastrados: 0</p>
-      <p id="unidades">Unidades em estoque: 0</p>
-    </section>
-
-    <section>
-      <h2>🧾 Produtos cadastrados</h2>
-      <div id="lista">Nenhum produto cadastrado.</div>
-    </section>
-  </main>
+    <p id="resumo" class="resumo"></p>
+    <h3>Produtos cadastrados</h3>
+    <div id="lista"></div>
+  </div>
 
   <script>
-    let produtos = [];
-
-    try {
-      produtos = JSON.parse(localStorage.getItem("mercadoFacil")) || [];
-    } catch (e) {
-      produtos = [];
-    }
+    let produtos = JSON.parse(
+      localStorage.getItem("mercadoFacil") || "[]"
+    );
 
     function salvar() {
-      try {
-        localStorage.setItem("mercadoFacil", JSON.stringify(produtos));
-      } catch (e) {
-        alert("Não foi possível salvar neste navegador.");
-      }
-    }
-
-    function dinheiro(valor) {
-      return Number(valor).toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL"
-      });
+      localStorage.setItem("mercadoFacil", JSON.stringify(produtos));
+      mostrar();
     }
 
     function cadastrar() {
       const nome = document.getElementById("nome").value.trim();
       const preco = Number(document.getElementById("preco").value);
-      const estoqueTexto = document.getElementById("estoque").value;
-      const estoque = Number(estoqueTexto);
+      const estoque = Number(document.getElementById("estoque").value);
 
-      if (!nome || !document.getElementById("preco").value ||
-          !estoqueTexto || !Number.isFinite(preco) ||
-          preco <= 0 || !Number.isInteger(estoque) || estoque < 0) {
+      if (!nome || document.getElementById("preco").value === "" ||
+          document.getElementById("estoque").value === "" ||
+          preco < 0 || estoque < 0 || !Number.isInteger(estoque)) {
         alert("Preencha os campos corretamente.");
         return;
       }
 
-      produtos.push({
-        id: Date.now(),
-        nome: nome,
-        preco: preco,
-        estoque: estoque
-      });
-
+      produtos.push({ nome, preco, estoque });
       salvar();
-      mostrar();
 
       document.getElementById("nome").value = "";
       document.getElementById("preco").value = "";
       document.getElementById("estoque").value = "";
     }
 
-    function excluir(id) {
-      if (!confirm("Deseja excluir este produto?")) return;
-      produtos = produtos.filter(p => p.id !== id);
+    function excluir(indice) {
+      produtos.splice(indice, 1);
       salvar();
-      mostrar();
     }
 
     function mostrar() {
       const lista = document.getElementById("lista");
-      lista.replaceChildren();
+      lista.innerHTML = "";
 
-      if (produtos.length === 0) {
-        lista.textContent = "Nenhum produto cadastrado.";
-      }
-
-      produtos.forEach(p => {
+      let unidades = 0;
+      produtos.forEach((p, i) => {
+        unidades += p.estoque;
         const item = document.createElement("div");
         item.className = "produto";
 
-        const nome = document.createElement("strong");
-        nome.textContent = p.nome;
-
-        const detalhe = document.createElement("p");
-        detalhe.textContent = dinheiro(p.preco) +
+        const descricao = document.createElement("p");
+        descricao.textContent = p.nome + " — R$ " +
+          p.preco.toFixed(2).replace(".", ",") +
           " | Estoque: " + p.estoque;
 
         const botao = document.createElement("button");
+        botao.className = "excluir";
         botao.textContent = "Excluir produto";
-        botao.onclick = () => excluir(p.id);
+        botao.onclick = () => excluir(i);
 
-        item.append(nome, detalhe, botao);
+        item.append(descricao, botao);
         lista.appendChild(item);
       });
 
       document.getElementById("resumo").textContent =
-        "Produtos cadastrados: " + produtos.length;
-
-      document.getElementById("unidades").textContent =
-        "Unidades em estoque: " +
-        produtos.reduce((total, p) => total + p.estoque, 0);
+        "Produtos: " + produtos.length +
+        " | Unidades em estoque: " + unidades;
     }
 
     mostrar();
