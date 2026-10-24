@@ -16,10 +16,7 @@
       color: #1e293b;
     }
 
-    .container {
-      max-width: 1100px;
-      margin: auto;
-    }
+    .container { max-width: 1100px; margin: auto; }
 
     header {
       padding: 25px;
@@ -52,10 +49,7 @@
       margin-bottom: 8px;
     }
 
-    .card strong {
-      font-size: 24px;
-      color: #0f766e;
-    }
+    .card strong { font-size: 24px; color: #0f766e; }
 
     section { margin-bottom: 20px; }
     h2 { margin-top: 0; font-size: 21px; }
@@ -84,7 +78,8 @@
     }
 
     button {
-      padding: 11px 15px;
+      padding: 10px 13px;
+      margin: 2px;
       border: 0;
       border-radius: 8px;
       background: #0f766e;
@@ -94,20 +89,18 @@
       cursor: pointer;
     }
 
-    button:hover { opacity: 0.88; }
+    button:hover { opacity: .88; }
     .btn-secundario { background: #64748b; }
-    .btn-excluir { background: #dc2626; padding: 9px 11px; }
+    .btn-editar { background: #2563eb; }
+    .btn-excluir { background: #dc2626; }
     .busca { margin-bottom: 15px; }
 
-    .tabela {
-      width: 100%;
-      overflow-x: auto;
-    }
+    .tabela { width: 100%; overflow-x: auto; }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 620px;
+      min-width: 700px;
     }
 
     th, td {
@@ -118,10 +111,7 @@
 
     th { background: #f8fafc; }
 
-    .vazio {
-      color: #64748b;
-      padding: 15px 0;
-    }
+    .vazio { color: #64748b; padding: 12px 0; }
 
     .venda {
       border-left: 4px solid #0f766e;
@@ -132,11 +122,7 @@
       overflow-wrap: anywhere;
     }
 
-    .venda strong {
-      display: block;
-      margin-bottom: 6px;
-    }
-
+    .venda strong { display: block; margin-bottom: 6px; }
     .venda small { color: #64748b; }
 
     footer {
@@ -183,6 +169,7 @@
 
   <section>
     <h2>📦 Cadastrar produto</h2>
+
     <form id="formProduto">
       <div class="campos">
         <div>
@@ -191,26 +178,29 @@
         </div>
         <div>
           <label for="precoProduto">Preço (R$)</label>
-          <input id="precoProduto" type="number" min="0.01"
-            step="0.01" required placeholder="Ex.: 25,00">
+          <input id="precoProduto" type="number"
+            min="0.01" step="0.01" required placeholder="Ex.: 25,00">
         </div>
         <div>
           <label for="quantidadeProduto">Quantidade em estoque</label>
-          <input id="quantidadeProduto" type="number" min="1"
-            step="1" required placeholder="Ex.: 10">
+          <input id="quantidadeProduto" type="number"
+            min="1" step="1" required placeholder="Ex.: 10">
         </div>
       </div>
+
       <button type="submit">Cadastrar produto</button>
       <button type="reset" class="btn-secundario">Limpar campos</button>
     </form>
+
     <p class="vazio">
-      Se o produto já existir com o mesmo preço, a nova quantidade
-      será somada ao estoque.
+      Se o produto já existir com o mesmo nome e preço,
+      a quantidade será somada ao estoque.
     </p>
   </section>
 
   <section>
     <h2>📋 Produtos e estoque</h2>
+
     <input id="buscaProduto" class="busca"
       placeholder="🔎 Buscar produto...">
 
@@ -222,17 +212,19 @@
             <th>Preço</th>
             <th>Estoque</th>
             <th>Valor em estoque</th>
-            <th>Ação</th>
+            <th>Ações</th>
           </tr>
         </thead>
         <tbody id="listaProdutos"></tbody>
       </table>
     </div>
+
     <p id="mensagemBusca" class="vazio"></p>
   </section>
 
   <section>
     <h2>💰 Registrar venda</h2>
+
     <form id="formVenda">
       <div class="campos">
         <div>
@@ -241,19 +233,21 @@
         </div>
         <div>
           <label for="quantidadeVenda">Quantidade</label>
-          <input id="quantidadeVenda" type="number" min="1"
-            step="1" value="1" required>
+          <input id="quantidadeVenda" type="number"
+            min="1" step="1" value="1" required>
         </div>
         <div>
           <label for="precoVenda">Preço unitário</label>
           <input id="precoVenda" readonly>
         </div>
       </div>
+
       <p>Total da venda: <strong id="valorVenda">R$ 0,00</strong></p>
       <button type="submit">Registrar venda</button>
     </form>
+
     <p class="vazio">
-      Ao registrar uma venda, o estoque é atualizado automaticamente.
+      Ao registrar uma venda, o estoque será atualizado automaticamente.
     </p>
   </section>
 
@@ -265,6 +259,7 @@
   <footer>
     Mercado Fácil • Projeto de estudo em HTML, CSS e JavaScript
   </footer>
+
 </div>
 
 <script>
@@ -308,17 +303,19 @@
   }
 
   function dataAtual() {
-    const agora = new Date();
-    const ano = agora.getFullYear();
-    const mes = String(agora.getMonth() + 1).padStart(2, "0");
-    const dia = String(agora.getDate()).padStart(2, "0");
-    return `${ano}-${mes}-${dia}`;
+    const d = new Date();
+    return [
+      d.getFullYear(),
+      String(d.getMonth() + 1).padStart(2, "0"),
+      String(d.getDate()).padStart(2, "0")
+    ].join("-");
   }
 
   function dataLegivel(data) {
     const d = new Date(data);
-    if (Number.isNaN(d.getTime())) return String(data || "");
-    return d.toLocaleString("pt-BR");
+    return Number.isNaN(d.getTime())
+      ? String(data || "")
+      : d.toLocaleString("pt-BR");
   }
 
   function normalizarProduto(p) {
@@ -353,7 +350,7 @@
     };
   });
 
-  // Garante IDs únicos para os produtos já cadastrados.
+  // Garante IDs únicos nos produtos já cadastrados.
   const idsUsados = new Set();
   produtos = produtos.map(p => {
     if (!p.id || idsUsados.has(String(p.id))) {
@@ -379,6 +376,7 @@
       dinheiro(vendas.reduce((soma, v) => soma + v.total, 0));
 
     const hoje = dataAtual();
+
     const totalHoje = vendas.reduce((soma, v) => {
       const d = new Date(v.data);
       if (Number.isNaN(d.getTime())) return soma;
@@ -414,10 +412,10 @@
         <td>${p.estoque}</td>
         <td>${dinheiro(p.preco * p.estoque)}</td>
         <td>
+          <button type="button" class="btn-editar"
+            data-editar="${escapar(p.id)}">Editar</button>
           <button type="button" class="btn-excluir"
-            data-excluir-produto="${escapar(p.id)}">
-            Excluir
-          </button>
+            data-excluir="${escapar(p.id)}">Excluir</button>
         </td>
       </tr>
     `).join("");
@@ -426,14 +424,74 @@
       ? ""
       : "Nenhum produto encontrado.";
 
-    lista.querySelectorAll("[data-excluir-produto]")
-      .forEach(botao => {
-        botao.addEventListener("click", () => {
-          excluirProduto(botao.dataset.excluirProduto);
-        });
+    lista.querySelectorAll("[data-editar]").forEach(botao => {
+      botao.addEventListener("click", () => {
+        editarProduto(botao.dataset.editar);
       });
+    });
+
+    lista.querySelectorAll("[data-excluir]").forEach(botao => {
+      botao.addEventListener("click", () => {
+        excluirProduto(botao.dataset.excluir);
+      });
+    });
 
     atualizarSelecaoVenda();
+  }
+
+  function editarProduto(id) {
+    const produto = produtos.find(p => String(p.id) === String(id));
+    if (!produto) return;
+
+    const nome = prompt("Nome do produto:", produto.nome);
+    if (nome === null) return;
+
+    if (!nome.trim()) {
+      alert("O nome do produto não pode ficar vazio.");
+      return;
+    }
+
+    const precoTexto = prompt(
+      "Preço do produto (use ponto ou vírgula nos centavos):",
+      String(produto.preco).replace(".", ",")
+    );
+    if (precoTexto === null) return;
+
+    const preco = Number(precoTexto.trim().replace(",", "."));
+
+    if (!Number.isFinite(preco) || preco <= 0) {
+      alert("Informe um preço válido maior que zero.");
+      return;
+    }
+
+    const estoqueTexto = prompt(
+      "Quantidade atual em estoque:",
+      String(produto.estoque)
+    );
+    if (estoqueTexto === null) return;
+
+    const estoque = Number(estoqueTexto);
+
+    if (!Number.isInteger(estoque) || estoque < 0) {
+      alert("O estoque deve ser um número inteiro igual ou maior que zero.");
+      return;
+    }
+
+    const confirmar = confirm(
+      "Confirmar alterações?\n\n" +
+      `Produto: ${produto.nome} → ${nome.trim()}\n` +
+      `Preço: ${dinheiro(produto.preco)} → ${dinheiro(preco)}\n` +
+      `Estoque: ${produto.estoque} → ${estoque}`
+    );
+
+    if (!confirmar) return;
+
+    produto.nome = nome.trim();
+    produto.preco = preco;
+    produto.estoque = estoque;
+
+    atualizarTela();
+    alert("Produto atualizado com sucesso!");
   }
 
   function atualizarSelecaoVenda() {
@@ -449,7 +507,8 @@
     `).join("");
 
     if (disponiveis.length === 0) {
-      select.innerHTML = '<option value="">Sem produtos em estoque</option>';
+      select.innerHTML =
+        '<option value="">Sem produtos em estoque</option>';
     } else if (disponiveis.some(p =>
       String(p.id) === String(idAnterior)
     )) {
@@ -515,12 +574,10 @@
     const produto = produtos.find(p => String(p.id) === String(id));
     if (!produto) return;
 
-    const confirmar = confirm(
-      `Deseja realmente excluir "${produto.nome}" do cadastro?\n\n` +
+    if (!confirm(
+      `Deseja excluir "${produto.nome}" do cadastro?\n\n` +
       "O histórico de vendas será mantido."
-    );
-
-    if (!confirmar) return;
+    )) return;
 
     produtos = produtos.filter(p => String(p.id) !== String(id));
     atualizarTela();
@@ -531,27 +588,30 @@
     const venda = vendas.find(v => String(v.id) === String(id));
     if (!venda) return;
 
-    const confirmar = confirm(
+    if (!confirm(
       `Deseja excluir esta venda?\n\n` +
       `Produto: ${venda.nome}\n` +
       `Quantidade: ${venda.quantidade}\n` +
       `Valor: ${dinheiro(venda.total)}\n\n` +
-      "Se o produto ainda estiver cadastrado, as unidades serão devolvidas ao estoque."
-    );
-
-    if (!confirmar) return;
+      "O total vendido será recalculado. Se possível, as unidades voltarão ao estoque."
+    )) return;
 
     let produto = venda.produtoId
       ? produtos.find(p => String(p.id) === String(venda.produtoId))
       : null;
 
-    // Compatibilidade com vendas antigas sem produtoId.
-    if (!produto) {
-      produto = produtos.find(p =>
+    // Para vendas antigas sem ID, só devolve unidades se
+    // houver uma correspondência única de nome e preço.
+    if (!venda.produtoId) {
+      const correspondencias = produtos.filter(p =>
         p.nome.toLocaleLowerCase("pt-BR") ===
           venda.nome.toLocaleLowerCase("pt-BR") &&
         p.preco === venda.preco
       );
+
+      if (correspondencias.length === 1) {
+        produto = correspondencias[0];
+      }
     }
 
     if (produto) {
@@ -563,7 +623,7 @@
 
     alert(produto
       ? "Venda excluída e estoque atualizado!"
-      : "Venda excluída. Como o produto não está cadastrado, o estoque não foi alterado."
+      : "Venda excluída. Não foi possível identificar o produto para devolver as unidades."
     );
   }
 
@@ -667,6 +727,7 @@
   document.getElementById("quantidadeVenda")
     .addEventListener("input", atualizarPrecoVenda);
 
+  // Inicializa o sistema sem apagar os dados existentes.
   atualizarTela();
 </script>
 </body>
