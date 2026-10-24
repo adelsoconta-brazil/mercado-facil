@@ -1,810 +1,492 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mercado Fácil</title>
-
-  <style>
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      padding: 20px;
-      font-family: Arial, sans-serif;
-      background: #f1f5f9;
-      color: #1e293b;
-    }
-
-    .container { max-width: 1100px; margin: auto; }
-
-    header {
-      padding: 25px;
-      margin-bottom: 20px;
-      border-radius: 16px;
-      color: white;
-      background: linear-gradient(135deg, #075985, #0f766e);
-    }
-
-    header h1 { margin: 0 0 8px; }
-    header p { margin: 0; }
-
-    .resumos {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-
-    .card, section {
-      padding: 20px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 3px 12px #0000000d;
-    }
-
-    .card span {
-      display: block;
-      color: #64748b;
-      margin-bottom: 8px;
-    }
-
-    .card strong { font-size: 24px; color: #0f766e; }
-
-    section { margin-bottom: 20px; }
-    h2 { margin-top: 0; font-size: 21px; }
-
-    .campos {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 12px;
-      margin-bottom: 15px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: bold;
-      font-size: 14px;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      font-size: 16px;
-      background: white;
-    }
-
-    button {
-      padding: 10px 13px;
-      margin: 2px;
-      border: 0;
-      border-radius: 8px;
-      background: #0f766e;
-      color: white;
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:hover { opacity: .88; }
-    .btn-secundario { background: #64748b; }
-    .btn-editar { background: #2563eb; }
-    .btn-excluir { background: #dc2626; }
-    .busca { margin-bottom: 15px; }
-
-    .tabela { width: 100%; overflow-x: auto; }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 700px;
-    }
-
-    th, td {
-      padding: 12px 10px;
-      border-bottom: 1px solid #e2e8f0;
-      text-align: left;
-    }
-
-    th { background: #f8fafc; }
-
-    .vazio { color: #64748b; padding: 12px 0; }
-
-    .alerta-geral {
-      padding: 14px;
-      margin-bottom: 20px;
-      border-radius: 10px;
-      background: #fef3c7;
-      color: #92400e;
-      border: 1px solid #f59e0b;
-    }
-
-    .alerta-geral strong {
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .estoque-baixo {
-      color: #b45309;
-      font-weight: bold;
-    }
-
-    .estoque-zero {
-      color: #dc2626;
-      font-weight: bold;
-    }
-
-    .estoque-normal {
-      color: #15803d;
-      font-weight: bold;
-    }
-
-    .venda {
-      border-left: 4px solid #0f766e;
-      padding: 12px;
-      margin-bottom: 12px;
-      background: #f8fafc;
-      border-radius: 6px;
-      overflow-wrap: anywhere;
-    }
-
-    .venda strong { display: block; margin-bottom: 6px; }
-    .venda small { color: #64748b; }
-
-    footer {
-      text-align: center;
-      color: #64748b;
-      padding: 15px;
-      font-size: 13px;
-    }
-
-    @media (max-width: 600px) {
-      body { padding: 12px; }
-      header, section, .card { padding: 16px; }
-      .card strong { font-size: 21px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mercado Fácil</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f3f7f4;color:#17211b}
+header{background:#14532d;color:white;text-align:center;padding:25px 12px}
+header h1{margin:0 0 8px}
+main{max-width:1000px;margin:20px auto;padding:0 12px}
+section,.cartao{background:white;border:1px solid #dce5de;border-radius:12px;padding:16px;margin-bottom:16px}
+h2{color:#14532d;margin-top:0}
+.resumo{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.cartao span{display:block;color:#647067}
+.cartao strong{display:block;font-size:1.3rem;color:#14532d;margin-top:5px}
+label{display:block;font-weight:bold;margin:10px 0 5px}
+input{width:100%;padding:11px;border:1px solid #cbd5ce;border-radius:8px;font-size:1rem}
+button{background:#166534;color:white;border:0;border-radius:8px;padding:10px 13px;margin:4px 2px;cursor:pointer;font-weight:bold}
+.secundario{background:#e5ece7;color:#183b27}
+.perigo{background:#b91c1c}
+.pequeno{padding:7px;font-size:.85rem}
+table{width:100%;border-collapse:collapse;min-width:600px}
+th,td{text-align:left;padding:10px;border-bottom:1px solid #e5eae6}
+th{background:#f1f7f2}
+.tabela{overflow-x:auto}
+.mensagem{color:#647067;font-size:.92rem}
+.alerta{background:#fff7ed;color:#92400e;padding:12px;border-radius:8px;margin-bottom:16px}
+.ok{background:#dcfce7;color:#14532d}
+.baixo{color:#92400e;font-weight:bold}
+.zero{color:#b91c1c;font-weight:bold}
+.vazio{text-align:center;color:#647067;padding:14px}
+.acoes{display:flex;flex-wrap:wrap;gap:4px}
+footer{text-align:center;color:#647067;padding:15px}
+@media(max-width:600px){
+ .resumo{grid-template-columns:1fr}
+ section{padding:12px}
+}
+</style>
 </head>
-
 <body>
-<div class="container">
+<header>
+<h1>🛒 Mercado Fácil</h1>
+<p>Controle de produtos, estoque e vendas</p>
+</header>
 
-  <header>
-    <h1>🛒 Mercado Fácil</h1>
-    <p>Controle simples de produtos, estoque e vendas</p>
-  </header>
-
-  <div id="alertaGeral" class="alerta-geral" hidden></div>
-
-  <div class="resumos">
-    <div class="card">
-      <span>Produtos cadastrados</span>
-      <strong id="totalProdutos">0</strong>
-    </div>
-    <div class="card">
-      <span>Unidades em estoque</span>
-      <strong id="totalEstoque">0</strong>
-    </div>
-    <div class="card">
-      <span>Total vendido</span>
-      <strong id="totalVendido">R$ 0,00</strong>
-    </div>
-    <div class="card">
-      <span>Vendas de hoje</span>
-      <strong id="vendasHoje">R$ 0,00</strong>
-    </div>
-  </div>
-
-  <section>
-    <h2>📦 Cadastrar produto</h2>
-
-    <form id="formProduto">
-      <div class="campos">
-        <div>
-          <label for="nomeProduto">Nome do produto</label>
-          <input id="nomeProduto" required placeholder="Ex.: Arroz">
-        </div>
-        <div>
-          <label for="precoProduto">Preço (R$)</label>
-          <input id="precoProduto" type="number"
-            min="0.01" step="0.01" required placeholder="Ex.: 25,00">
-        </div>
-        <div>
-          <label for="quantidadeProduto">Quantidade em estoque</label>
-          <input id="quantidadeProduto" type="number"
-            min="1" step="1" required placeholder="Ex.: 10">
-        </div>
-      </div>
-
-      <button type="submit">Cadastrar produto</button>
-      <button type="reset" class="btn-secundario">Limpar campos</button>
-    </form>
-
-    <p class="vazio">
-      Se o produto já existir com o mesmo nome e preço,
-      a nova quantidade será somada ao estoque.
-    </p>
-  </section>
-
-  <section>
-    <h2>📋 Produtos e estoque</h2>
-    <p class="vazio">⚠️ Estoque baixo: 5 unidades ou menos.</p>
-
-    <input id="buscaProduto" class="busca"
-      placeholder="🔎 Buscar produto...">
-
-    <div class="tabela">
-      <table>
-        <thead>
-          <tr>
-            <th>Produto</th>
-            <th>Preço</th>
-            <th>Estoque</th>
-            <th>Valor em estoque</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody id="listaProdutos"></tbody>
-      </table>
-    </div>
-
-    <p id="mensagemBusca" class="vazio"></p>
-  </section>
-
-  <section>
-    <h2>💰 Registrar venda</h2>
-
-    <form id="formVenda">
-      <div class="campos">
-        <div>
-          <label for="produtoVenda">Produto</label>
-          <select id="produtoVenda" required></select>
-        </div>
-        <div>
-          <label for="quantidadeVenda">Quantidade</label>
-          <input id="quantidadeVenda" type="number"
-            min="1" step="1" value="1" required>
-        </div>
-        <div>
-          <label for="precoVenda">Preço unitário</label>
-          <input id="precoVenda" readonly>
-        </div>
-      </div>
-
-      <p>Total da venda: <strong id="valorVenda">R$ 0,00</strong></p>
-      <button type="submit">Registrar venda</button>
-    </form>
-
-    <p class="vazio">
-      Ao registrar uma venda, o estoque será atualizado automaticamente.
-    </p>
-  </section>
-
-  <section>
-    <h2>🧾 Histórico de vendas</h2>
-    <div id="historicoVendas"></div>
-  </section>
-
-  <footer>
-    Mercado Fácil • Projeto de estudo em HTML, CSS e JavaScript
-  </footer>
-
+<main>
+<div class="resumo">
+ <div class="cartao"><span>Produtos cadastrados</span><strong id="totalProdutos">0</strong></div>
+ <div class="cartao"><span>Unidades em estoque</span><strong id="totalEstoque">0</strong></div>
+ <div class="cartao"><span>Total vendido</span><strong id="totalVendido">R$ 0,00</strong></div>
 </div>
 
+<div id="alertasEstoque" aria-live="polite"></div>
+
+<section>
+<h2>➕ Cadastrar produto</h2>
+<form id="formProduto">
+<label for="nomeProduto">Nome do produto</label>
+<input id="nomeProduto" required maxlength="100" placeholder="Ex.: Arroz 5 kg">
+<label for="precoProduto">Preço (R$)</label>
+<input id="precoProduto" type="number" min="0.01" step="0.01" required placeholder="Ex.: 24.90">
+<label for="estoqueProduto">Quantidade em estoque</label>
+<input id="estoqueProduto" type="number" min="0" step="1" required placeholder="Ex.: 10">
+<div class="acoes">
+<button type="submit">Salvar produto</button>
+<button type="reset" class="secundario">Limpar</button>
+</div>
+</form>
+<p id="mensagemProduto" class="mensagem" aria-live="polite"></p>
+</section>
+
+<section>
+<h2>📦 Produtos cadastrados</h2>
+<label for="buscaProduto">Pesquisar produto</label>
+<input id="buscaProduto" type="search" placeholder="Digite o nome do produto">
+<div class="tabela">
+<table>
+<thead><tr><th>Produto</th><th>Preço</th><th>Estoque</th><th>Vender</th><th>Ações</th></tr></thead>
+<tbody id="listaProdutos"></tbody>
+</table>
+</div>
+<p id="vazioProdutos" class="vazio">Nenhum produto cadastrado.</p>
+</section>
+
+<section>
+<h2>🧾 Histórico de vendas</h2>
+<div class="tabela">
+<table>
+<thead><tr><th>Data e hora</th><th>Produto</th><th>Qtd.</th><th>Preço</th><th>Total</th><th>Ação</th></tr></thead>
+<tbody id="listaVendas"></tbody>
+</table>
+</div>
+<p id="vazioVendas" class="vazio">Nenhuma venda registrada.</p>
+</section>
+
+<section>
+<h2>🛡️ Backup e restauração</h2>
+<p>Baixe uma cópia dos produtos e do histórico de vendas. Guarde o arquivo em local seguro.</p>
+<button type="button" id="btnBackup">📥 Fazer backup</button>
+<button type="button" id="btnEscolherBackup" class="secundario">📂 Restaurar backup</button>
+<input type="file" id="arquivoBackup" accept=".json,application/json" hidden>
+<p id="mensagemBackup" class="mensagem" aria-live="polite">Faça backup regularmente.</p>
+<p class="mensagem"><strong>Atenção:</strong> restaurar substitui os dados atuais. O sistema tentará baixar uma cópia antes da restauração.</p>
+</section>
+</main>
+
+<footer>Mercado Fácil • Dados salvos neste navegador</footer>
+
 <script>
-  const CHAVE_PRODUTOS = "mercadoFacil";
-  const CHAVE_VENDAS = "mercadoFacilVendas";
-  const LIMITE_ESTOQUE_BAIXO = 5;
+"use strict";
 
-  function lerDados(chave) {
-    try {
-      const dados = JSON.parse(localStorage.getItem(chave));
-      return Array.isArray(dados) ? dados : [];
-    } catch {
-      return [];
-    }
+const CHAVE_PRODUTOS = "mercadoFacil";
+const CHAVE_VENDAS = "mercadoFacilVendas";
+const VERSAO_BACKUP = 1;
+const LIMITE_ESTOQUE_BAIXO = 5;
+
+let produtos = lerDados(CHAVE_PRODUTOS).map(normalizarProduto);
+let vendas = lerDados(CHAVE_VENDAS).map(normalizarVenda);
+
+function lerDados(chave) {
+  try {
+    const dados = JSON.parse(localStorage.getItem(chave) || "[]");
+    return Array.isArray(dados) ? dados : [];
+  } catch {
+    return [];
   }
+}
 
-  function criarId() {
-    return Date.now().toString(36) +
-      Math.random().toString(36).slice(2, 9);
-  }
+function normalizarProduto(p, i) {
+  return {
+    ...p,
+    id: p.id ?? (Date.now() + i),
+    nome: String(p.nome ?? "Produto"),
+    preco: Number(p.preco) || 0,
+    estoque: Math.max(0, Math.floor(Number(p.estoque) || 0))
+  };
+}
 
-  function numero(valor) {
-    const n = Number(valor);
-    return Number.isFinite(n) ? n : 0;
-  }
+function normalizarVenda(v, i) {
+  const quantidade = Number(v.quantidade) || 1;
+  const preco = Number(v.preco) || 0;
+  return {
+    ...v,
+    id: v.id ?? (Date.now() + i),
+    nome: String(v.nome ?? "Produto"),
+    quantidade,
+    preco,
+    total: Number.isFinite(Number(v.total)) ? Number(v.total) : quantidade * preco,
+    data: v.data ?? v.dataHora ?? v.dataVenda ?? new Date().toISOString(),
+    produtoId: v.produtoId ?? null
+  };
+}
 
-  function dinheiro(valor) {
-    return numero(valor).toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL"
-    });
-  }
-
-  function escapar(texto) {
-    return String(texto ?? "").replace(/[&<>"']/g, letra => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;"
-    })[letra]);
-  }
-
-  function dataAtual() {
-    const d = new Date();
-    return [
-      d.getFullYear(),
-      String(d.getMonth() + 1).padStart(2, "0"),
-      String(d.getDate()).padStart(2, "0")
-    ].join("-");
-  }
-
-  function dataLegivel(data) {
-    const d = new Date(data);
-    return Number.isNaN(d.getTime())
-      ? String(data || "")
-      : d.toLocaleString("pt-BR");
-  }
-
-  function normalizarProduto(p) {
-    return {
-      ...p,
-      id: p.id ?? criarId(),
-      nome: String(p.nome ?? p.name ?? p.produto ?? ""),
-      preco: numero(p.preco ?? p.price ?? 0),
-      estoque: Math.max(0, numero(
-        p.estoque ?? p.quantidade ?? p.stock ??
-        p.quantidadeEstoque ?? 0
-      ))
-    };
-  }
-
-  let produtos = lerDados(CHAVE_PRODUTOS).map(normalizarProduto);
-
-  let vendas = lerDados(CHAVE_VENDAS).map(v => {
-    const quantidade = numero(v.quantidade ?? v.qtd ?? 0);
-    const preco = numero(v.preco ?? v.precoUnitario ?? v.price ?? 0);
-
-    return {
-      ...v,
-      id: v.id ?? criarId(),
-      produtoId: v.produtoId ?? null,
-      nome: String(v.nome ?? v.produto ?? v.name ?? "Produto"),
-      quantidade,
-      preco,
-      total: numero(v.total ?? v.valorTotal ?? quantidade * preco),
-      data: v.data ?? v.dataHora ?? v.dataVenda ??
-        new Date().toISOString()
-    };
-  });
-
-  const idsUsados = new Set();
-  produtos = produtos.map(p => {
-    if (!p.id || idsUsados.has(String(p.id))) {
-      p.id = criarId();
-    }
-    idsUsados.add(String(p.id));
-    return p;
-  });
-
-  function salvar() {
+function salvar() {
+  try {
     localStorage.setItem(CHAVE_PRODUTOS, JSON.stringify(produtos));
     localStorage.setItem(CHAVE_VENDAS, JSON.stringify(vendas));
+  } catch (erro) {
+    alert("Não foi possível salvar. Faça backup e verifique o espaço disponível.");
+    console.error(erro);
+  }
+}
+
+function moeda(valor) {
+  return Number(valor || 0).toLocaleString("pt-BR", {
+    style: "currency", currency: "BRL"
+  });
+}
+
+function escapar(valor) {
+  return String(valor ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+  })[c]);
+}
+
+function formatarData(valor) {
+  const data = new Date(valor);
+  return Number.isNaN(data.getTime()) ? "Data não informada" : data.toLocaleString("pt-BR");
+}
+
+function atualizarResumo() {
+  document.getElementById("totalProdutos").textContent = produtos.length;
+  document.getElementById("totalEstoque").textContent =
+    produtos.reduce((s, p) => s + p.estoque, 0);
+  document.getElementById("totalVendido").textContent =
+    moeda(vendas.reduce((s, v) => s + Number(v.total || 0), 0));
+}
+
+function atualizarAlertas() {
+  const area = document.getElementById("alertasEstoque");
+  const zerados = produtos.filter(p => p.estoque === 0);
+  const baixos = produtos.filter(p => p.estoque > 0 && p.estoque <= LIMITE_ESTOQUE_BAIXO);
+
+  if (!zerados.length && !baixos.length) {
+    area.innerHTML = '<div class="alerta ok">✅ Estoque em dia. Nenhum alerta.</div>';
+    return;
   }
 
-  function atualizarResumo() {
-    document.getElementById("totalProdutos").textContent =
-      produtos.length;
+  let html = '<div class="alerta"><strong>⚠️ Atenção ao estoque</strong>';
+  if (zerados.length) {
+    html += "<p><strong>Sem estoque:</strong></p><ul>" +
+      zerados.map(p => `<li>${escapar(p.nome)}</li>`).join("") + "</ul>";
+  }
+  if (baixos.length) {
+    html += `<p><strong>Estoque baixo (até ${LIMITE_ESTOQUE_BAIXO} unidades):</strong></p><ul>` +
+      baixos.map(p => `<li>${escapar(p.nome)} — ${p.estoque} unidade(s)</li>`).join("") + "</ul>";
+  }
+  area.innerHTML = html + "</div>";
+}
 
-    document.getElementById("totalEstoque").textContent =
-      produtos.reduce((soma, p) => soma + p.estoque, 0);
+function atualizarProdutos() {
+  const busca = document.getElementById("buscaProduto").value.trim().toLowerCase();
+  const encontrados = produtos.filter(p => p.nome.toLowerCase().includes(busca));
 
-    document.getElementById("totalVendido").textContent =
-      dinheiro(vendas.reduce((soma, v) => soma + v.total, 0));
+  document.getElementById("listaProdutos").innerHTML = encontrados.map(p => {
+    const classe = p.estoque === 0 ? "zero" : p.estoque <= LIMITE_ESTOQUE_BAIXO ? "baixo" : "";
+    return `<tr>
+      <td>${escapar(p.nome)}</td>
+      <td>${moeda(p.preco)}</td>
+      <td class="${classe}">${p.estoque}</td>
+      <td><button class="pequeno" data-acao="vender" data-id="${escapar(p.id)}" ${p.estoque <= 0 ? "disabled" : ""}>Vender</button></td>
+      <td>
+        <button class="pequeno secundario" data-acao="editar" data-id="${escapar(p.id)}">Editar</button>
+        <button class="pequeno perigo" data-acao="excluir" data-id="${escapar(p.id)}">Excluir</button>
+      </td>
+    </tr>`;
+  }).join("");
 
-    const hoje = dataAtual();
+  document.getElementById("vazioProdutos").hidden = encontrados.length > 0;
+}
 
-    const totalHoje = vendas.reduce((soma, v) => {
-      const d = new Date(v.data);
-      if (Number.isNaN(d.getTime())) return soma;
+function atualizarVendas() {
+  const ordenadas = [...vendas].sort((a,b) => new Date(b.data) - new Date(a.data));
+  document.getElementById("listaVendas").innerHTML = ordenadas.map(v => `
+    <tr>
+      <td>${escapar(formatarData(v.data))}</td>
+      <td>${escapar(v.nome)}</td>
+      <td>${v.quantidade}</td>
+      <td>${moeda(v.preco)}</td>
+      <td>${moeda(v.total)}</td>
+      <td><button class="pequeno perigo" data-acao-venda="excluir" data-id="${escapar(v.id)}">Excluir venda</button></td>
+    </tr>`).join("");
+  document.getElementById("vazioVendas").hidden = ordenadas.length > 0;
+}
 
-      const dataVenda = [
-        d.getFullYear(),
-        String(d.getMonth() + 1).padStart(2, "0"),
-        String(d.getDate()).padStart(2, "0")
-      ].join("-");
+function atualizarTela() {
+  atualizarResumo();
+  atualizarAlertas();
+  atualizarProdutos();
+  atualizarVendas();
+  salvar();
+}
 
-      return soma + (dataVenda === hoje ? v.total : 0);
-    }, 0);
+document.getElementById("formProduto").addEventListener("submit", evento => {
+  evento.preventDefault();
+  const nome = document.getElementById("nomeProduto").value.trim();
+  const preco = Number(document.getElementById("precoProduto").value);
+  const estoque = Number(document.getElementById("estoqueProduto").value);
 
-    document.getElementById("vendasHoje").textContent =
-      dinheiro(totalHoje);
+  if (!nome || !Number.isFinite(preco) || preco <= 0 ||
+      !Number.isInteger(estoque) || estoque < 0) {
+    alert("Confira o nome, o preço e a quantidade informados.");
+    return;
   }
 
-  function atualizarAlertaEstoque() {
-    const alerta = document.getElementById("alertaGeral");
+  produtos.push({ id: Date.now(), nome, preco, estoque });
+  atualizarTela();
+  evento.target.reset();
+  document.getElementById("mensagemProduto").textContent = "Produto cadastrado com sucesso!";
+});
 
-    const zerados = produtos.filter(p => p.estoque === 0);
-    const baixos = produtos.filter(p =>
-      p.estoque > 0 && p.estoque <= LIMITE_ESTOQUE_BAIXO
-    );
+document.getElementById("buscaProduto").addEventListener("input", atualizarProdutos);
 
-    if (zerados.length === 0 && baixos.length === 0) {
-      alerta.hidden = true;
-      alerta.innerHTML = "";
-      return;
-    }
+document.getElementById("listaProdutos").addEventListener("click", evento => {
+  const botao = evento.target.closest("button[data-acao]");
+  if (!botao) return;
 
-    alerta.hidden = false;
+  const produto = produtos.find(p => String(p.id) === botao.dataset.id);
+  if (!produto) return;
 
-    let html = "<strong>⚠️ Atenção ao estoque!</strong>";
-
-    if (zerados.length > 0) {
-      html += "<p><b>🔴 Produtos sem estoque:</b> " +
-        zerados.map(p => escapar(p.nome)).join(", ") +
-        ".</p>";
-    }
-
-    if (baixos.length > 0) {
-      html += "<p><b>🟠 Produtos com estoque baixo:</b> " +
-        baixos.map(p =>
-          escapar(p.nome) + " (" + p.estoque + " unidade(s))"
-        ).join(", ") +
-        ".</p>";
-    }
-
-    alerta.innerHTML = html;
-  }
-
-  function mostrarProdutos() {
-    const busca = document.getElementById("buscaProduto")
-      .value.trim().toLocaleLowerCase("pt-BR");
-
-    const lista = document.getElementById("listaProdutos");
-    const mensagem = document.getElementById("mensagemBusca");
-
-    const filtrados = produtos.filter(p =>
-      p.nome.toLocaleLowerCase("pt-BR").includes(busca)
-    );
-
-    lista.innerHTML = filtrados.map(p => {
-      let classeEstoque = "estoque-normal";
-      let textoEstoque = String(p.estoque);
-
-      if (p.estoque === 0) {
-        classeEstoque = "estoque-zero";
-        textoEstoque = "ZERADO";
-      } else if (p.estoque <= LIMITE_ESTOQUE_BAIXO) {
-        classeEstoque = "estoque-baixo";
-        textoEstoque += " ⚠️";
-      }
-
-      return `
-        <tr>
-          <td>${escapar(p.nome)}</td>
-          <td>${dinheiro(p.preco)}</td>
-          <td class="${classeEstoque}">${textoEstoque}</td>
-          <td>${dinheiro(p.preco * p.estoque)}</td>
-          <td>
-            <button type="button" class="btn-editar"
-              data-editar="${escapar(p.id)}">Editar</button>
-            <button type="button" class="btn-excluir"
-              data-excluir="${escapar(p.id)}">Excluir</button>
-          </td>
-        </tr>
-      `;
-    }).join("");
-
-    mensagem.textContent = filtrados.length
-      ? ""
-      : "Nenhum produto encontrado.";
-
-    lista.querySelectorAll("[data-editar]").forEach(botao => {
-      botao.addEventListener("click", () => {
-        editarProduto(botao.dataset.editar);
-      });
-    });
-
-    lista.querySelectorAll("[data-excluir]").forEach(botao => {
-      botao.addEventListener("click", () => {
-        excluirProduto(botao.dataset.excluir);
-      });
-    });
-
-    atualizarSelecaoVenda();
-  }
-
-  function editarProduto(id) {
-    const produto = produtos.find(p => String(p.id) === String(id));
-    if (!produto) return;
-
-    const nome = prompt("Nome do produto:", produto.nome);
+  if (botao.dataset.acao === "editar") {
+    const nome = prompt("Novo nome:", produto.nome);
     if (nome === null) return;
+    if (!nome.trim()) { alert("O nome não pode ficar vazio."); return; }
 
-    if (!nome.trim()) {
-      alert("O nome não pode ficar vazio.");
-      return;
-    }
-
-    const precoTexto = prompt(
-      "Preço do produto (use ponto ou vírgula nos centavos):",
-      String(produto.preco).replace(".", ",")
-    );
+    const precoTexto = prompt("Novo preço:", String(produto.preco).replace(".", ","));
     if (precoTexto === null) return;
+    const preco = Number(precoTexto.replace(",", "."));
+    if (!Number.isFinite(preco) || preco <= 0) { alert("Preço inválido."); return; }
 
-    const preco = Number(precoTexto.trim().replace(",", "."));
-
-    if (!Number.isFinite(preco) || preco <= 0) {
-      alert("Informe um preço válido maior que zero.");
-      return;
-    }
-
-    const estoqueTexto = prompt(
-      "Quantidade atual em estoque:",
-      String(produto.estoque)
-    );
+    const estoqueTexto = prompt("Novo estoque:", String(produto.estoque));
     if (estoqueTexto === null) return;
-
     const estoque = Number(estoqueTexto);
+    if (!Number.isInteger(estoque) || estoque < 0) { alert("Estoque inválido."); return; }
 
-    if (!Number.isInteger(estoque) || estoque < 0) {
-      alert("O estoque deve ser um número inteiro igual ou maior que zero.");
-      return;
-    }
-
-    if (!confirm(
-      "Confirmar alterações?\n\n" +
-      `Produto: ${produto.nome} → ${nome.trim()}\n` +
-      `Preço: ${dinheiro(produto.preco)} → ${dinheiro(preco)}\n` +
-      `Estoque: ${produto.estoque} → ${estoque}`
-    )) return;
-
+    if (!confirm("Confirma a atualização do produto?")) return;
     produto.nome = nome.trim();
     produto.preco = preco;
     produto.estoque = estoque;
-
     atualizarTela();
     alert("Produto atualizado com sucesso!");
   }
 
-  function atualizarSelecaoVenda() {
-    const select = document.getElementById("produtoVenda");
-    const idAnterior = select.value;
-    const disponiveis = produtos.filter(p => p.estoque > 0);
-
-    select.innerHTML = disponiveis.map(p => `
-      <option value="${escapar(p.id)}">
-        ${escapar(p.nome)} — ${dinheiro(p.preco)}
-        (estoque: ${p.estoque})
-      </option>
-    `).join("");
-
-    if (disponiveis.length === 0) {
-      select.innerHTML =
-        '<option value="">Sem produtos em estoque</option>';
-    } else if (disponiveis.some(p =>
-      String(p.id) === String(idAnterior)
-    )) {
-      select.value = idAnterior;
-    }
-
-    atualizarPrecoVenda();
-  }
-
-  function atualizarPrecoVenda() {
-    const id = document.getElementById("produtoVenda").value;
-    const produto = produtos.find(p => String(p.id) === String(id));
-    const quantidade = numero(
-      document.getElementById("quantidadeVenda").value
-    );
-
-    document.getElementById("precoVenda").value =
-      produto ? dinheiro(produto.preco) : "";
-
-    document.getElementById("valorVenda").textContent =
-      produto ? dinheiro(produto.preco * quantidade) : dinheiro(0);
-  }
-
-  function mostrarVendas() {
-    const historico = document.getElementById("historicoVendas");
-
-    if (vendas.length === 0) {
-      historico.innerHTML =
-        '<p class="vazio">Nenhuma venda registrada ainda.</p>';
-      return;
-    }
-
-    historico.innerHTML = [...vendas].reverse().map(v => `
-      <div class="venda">
-        <strong>${escapar(v.nome)} — ${dinheiro(v.total)}</strong>
-        ${v.quantidade} unidade(s) × ${dinheiro(v.preco)}
-        <br>
-        <small>${escapar(dataLegivel(v.data))}</small>
-        <br><br>
-        <button type="button" class="btn-excluir"
-          data-excluir-venda="${escapar(v.id)}">
-          Excluir venda
-        </button>
-      </div>
-    `).join("");
-
-    historico.querySelectorAll("[data-excluir-venda]")
-      .forEach(botao => {
-        botao.addEventListener("click", () => {
-          excluirVenda(botao.dataset.excluirVenda);
-        });
-      });
-  }
-
-  function atualizarTela() {
-    salvar();
-    atualizarResumo();
-    atualizarAlertaEstoque();
-    mostrarProdutos();
-    mostrarVendas();
-  }
-
-  function excluirProduto(id) {
-    const produto = produtos.find(p => String(p.id) === String(id));
-    if (!produto) return;
-
-    if (!confirm(
-      `Deseja excluir "${produto.nome}" do cadastro?\n\n` +
-      "O histórico de vendas será mantido."
-    )) return;
-
-    produtos = produtos.filter(p => String(p.id) !== String(id));
+  if (botao.dataset.acao === "excluir") {
+    if (!confirm(`Deseja excluir "${produto.nome}"? O histórico de vendas será mantido.`)) return;
+    produtos = produtos.filter(p => String(p.id) !== String(produto.id));
     atualizarTela();
-    alert("Produto excluído do cadastro.");
   }
 
-  function excluirVenda(id) {
-    const venda = vendas.find(v => String(v.id) === String(id));
-    if (!venda) return;
+  if (botao.dataset.acao === "vender") {
+    const texto = prompt(`Quantidade para vender. Estoque disponível: ${produto.estoque}`, "1");
+    if (texto === null) return;
+    const quantidade = Number(texto);
+    if (!Number.isInteger(quantidade) || quantidade <= 0) { alert("Quantidade inválida."); return; }
+    if (quantidade > produto.estoque) { alert("Estoque insuficiente."); return; }
 
-    if (!confirm(
-      `Deseja excluir esta venda?\n\n` +
-      `Produto: ${venda.nome}\n` +
-      `Quantidade: ${venda.quantidade}\n` +
-      `Valor: ${dinheiro(venda.total)}\n\n` +
-      "Se o produto ainda estiver cadastrado, as unidades voltarão ao estoque."
-    )) return;
+    const total = quantidade * produto.preco;
+    if (!confirm(`Confirmar venda de ${quantidade} unidade(s) de ${produto.nome} por ${moeda(total)}?`)) return;
 
-    let produto = venda.produtoId
-      ? produtos.find(p => String(p.id) === String(venda.produtoId))
-      : null;
-
-    if (!venda.produtoId) {
-      const correspondencias = produtos.filter(p =>
-        p.nome.toLocaleLowerCase("pt-BR") ===
-          venda.nome.toLocaleLowerCase("pt-BR") &&
-        p.preco === venda.preco
-      );
-
-      if (correspondencias.length === 1) {
-        produto = correspondencias[0];
-      }
-    }
-
-    if (produto) {
-      produto.estoque += venda.quantidade;
-    }
-
-    vendas = vendas.filter(v => String(v.id) !== String(id));
+    produto.estoque -= quantidade;
+    vendas.push({
+      id: Date.now(),
+      produtoId: produto.id,
+      nome: produto.nome,
+      quantidade,
+      preco: produto.preco,
+      total,
+      data: new Date().toISOString()
+    });
     atualizarTela();
-
-    alert(produto
-      ? "Venda excluída e estoque atualizado!"
-      : "Venda excluída. Não foi possível identificar o produto para devolver as unidades."
-    );
+    alert("Venda registrada com sucesso!");
   }
+});
 
-  document.getElementById("formProduto")
-    .addEventListener("submit", evento => {
-      evento.preventDefault();
+document.getElementById("listaVendas").addEventListener("click", evento => {
+  const botao = evento.target.closest("button[data-acao-venda]");
+  if (!botao) return;
+  const venda = vendas.find(v => String(v.id) === botao.dataset.id);
+  if (!venda) return;
 
-      const nome = document.getElementById("nomeProduto")
-        .value.trim();
-      const preco = Number(
-        document.getElementById("precoProduto").value
-      );
-      const quantidade = Number(
-        document.getElementById("quantidadeProduto").value
-      );
-
-      if (!nome || !Number.isFinite(preco) || preco <= 0 ||
-          !Number.isInteger(quantidade) || quantidade < 1) {
-        alert("Confira o nome, o preço e a quantidade do produto.");
-        return;
-      }
-
-      const existente = produtos.find(p =>
-        p.nome.toLocaleLowerCase("pt-BR") ===
-          nome.toLocaleLowerCase("pt-BR") &&
-        p.preco === preco
-      );
-
-      if (existente) {
-        existente.estoque += quantidade;
-      } else {
-        produtos.push({
-          id: criarId(),
-          nome,
-          preco,
-          estoque: quantidade
-        });
-      }
-
-      atualizarTela();
-      evento.target.reset();
-      alert("Produto cadastrado com sucesso!");
-    });
-
-  document.getElementById("formVenda")
-    .addEventListener("submit", evento => {
-      evento.preventDefault();
-
-      const id = document.getElementById("produtoVenda").value;
-      const quantidade = Number(
-        document.getElementById("quantidadeVenda").value
-      );
-      const produto = produtos.find(p => String(p.id) === String(id));
-
-      if (!produto) {
-        alert("Cadastre um produto com estoque antes de vender.");
-        return;
-      }
-
-      if (!Number.isInteger(quantidade) || quantidade < 1) {
-        alert("Informe uma quantidade válida.");
-        return;
-      }
-
-      if (quantidade > produto.estoque) {
-        alert("Estoque insuficiente para essa venda.");
-        return;
-      }
-
-      const total = produto.preco * quantidade;
-
-      if (!confirm(
-        `Confirmar venda?\n\nProduto: ${produto.nome}\n` +
-        `Quantidade: ${quantidade}\nTotal: ${dinheiro(total)}`
-      )) return;
-
-      produto.estoque -= quantidade;
-
-      vendas.push({
-        id: criarId(),
-        produtoId: produto.id,
-        nome: produto.nome,
-        quantidade,
-        preco: produto.preco,
-        total,
-        data: new Date().toISOString()
-      });
-
-      atualizarTela();
-      document.getElementById("quantidadeVenda").value = 1;
-      atualizarPrecoVenda();
-      alert("Venda registrada com sucesso!");
-    });
-
-  document.getElementById("buscaProduto")
-    .addEventListener("input", mostrarProdutos);
-
-  document.getElementById("produtoVenda")
-    .addEventListener("change", atualizarPrecoVenda);
-
-  document.getElementById("quantidadeVenda")
-    .addEventListener("input", atualizarPrecoVenda);
-
+  if (!confirm(`Excluir a venda de "${venda.nome}"? Se o produto ainda existir, o estoque será devolvido.`)) return;
+  if (venda.produtoId != null) {
+    const produto = produtos.find(p => String(p.id) === String(venda.produtoId));
+    if (produto) produto.estoque += venda.quantidade;
+  }
+  vendas = vendas.filter(v => String(v.id) !== String(venda.id));
   atualizarTela();
+});
+
+// ===== BACKUP E RESTAURAÇÃO =====
+function criarBackup() {
+  return {
+    aplicacao: "Mercado Fácil",
+    versaoBackup: VERSAO_BACKUP,
+    dataBackup: new Date().toISOString(),
+    produtos,
+    vendas
+  };
+}
+
+function nomeArquivoBackup(prefixo) {
+  const d = new Date();
+  const data = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  const hora = `${String(d.getHours()).padStart(2,"0")}-${String(d.getMinutes()).padStart(2,"0")}-${String(d.getSeconds()).padStart(2,"0")}`;
+  return `${prefixo}-${data}-${hora}.json`;
+}
+
+function baixarBackup(dados, nome) {
+  const blob = new Blob([JSON.stringify(dados, null, 2)], {type:"application/json;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = nome;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+
+function validarBackup(dados) {
+  if (!dados || dados.aplicacao !== "Mercado Fácil" ||
+      dados.versaoBackup !== VERSAO_BACKUP ||
+      !Array.isArray(dados.produtos) || !Array.isArray(dados.vendas)) {
+    throw new Error("Arquivo inválido ou incompatível.");
+  }
+
+  const idsProdutos = new Set();
+  for (const p of dados.produtos) {
+    if (!p || p.id == null || typeof p.nome !== "string" || !p.nome.trim() ||
+        !Number.isFinite(Number(p.preco)) || Number(p.preco) <= 0 ||
+        !Number.isInteger(Number(p.estoque)) || Number(p.estoque) < 0) {
+      throw new Error("O backup contém um produto inválido.");
+    }
+    if (idsProdutos.has(String(p.id))) throw new Error("Há identificadores repetidos nos produtos.");
+    idsProdutos.add(String(p.id));
+  }
+
+  const idsVendas = new Set();
+  for (const v of dados.vendas) {
+    if (!v || v.id == null || typeof v.nome !== "string" ||
+        !Number.isFinite(Number(v.quantidade)) || Number(v.quantidade) <= 0 ||
+        !Number.isFinite(Number(v.preco)) || Number(v.preco) < 0 ||
+        !Number.isFinite(Number(v.total)) || Number(v.total) < 0) {
+      throw new Error("O backup contém uma venda inválida.");
+    }
+    if (idsVendas.has(String(v.id))) throw new Error("Há identificadores repetidos nas vendas.");
+    idsVendas.add(String(v.id));
+  }
+}
+
+document.getElementById("btnBackup").addEventListener("click", () => {
+  try {
+    baixarBackup(criarBackup(), nomeArquivoBackup("mercado-facil-backup"));
+    document.getElementById("mensagemBackup").textContent =
+      "Backup preparado. Confira se o arquivo JSON foi baixado.";
+  } catch (erro) {
+    alert("Erro ao gerar backup: " + erro.message);
+  }
+});
+
+document.getElementById("btnEscolherBackup").addEventListener("click", () => {
+  document.getElementById("arquivoBackup").click();
+});
+
+document.getElementById("arquivoBackup").addEventListener("change", async evento => {
+  const arquivo = evento.target.files && evento.target.files[0];
+  if (!arquivo) return;
+
+  let backup;
+  try {
+    backup = JSON.parse(await arquivo.text());
+    validarBackup(backup);
+  } catch (erro) {
+    alert("Não foi possível restaurar o arquivo.\n" + erro.message);
+    evento.target.value = "";
+    return;
+  }
+
+  if (!confirm(
+    "ATENÇÃO: os dados atuais serão substituídos.\n\n" +
+    `Data do backup: ${formatarData(backup.dataBackup)}\n` +
+    `Produtos: ${backup.produtos.length}\nVendas: ${backup.vendas.length}\n\n` +
+    "Deseja continuar?"
+  )) {
+    evento.target.value = "";
+    return;
+  }
+
+  const produtosAntigos = localStorage.getItem(CHAVE_PRODUTOS);
+  const vendasAntigas = localStorage.getItem(CHAVE_VENDAS);
+
+  try {
+    baixarBackup(criarBackup(), nomeArquivoBackup("mercado-facil-seguranca"));
+
+    const novosProdutos = backup.produtos.map(normalizarProduto);
+    const novasVendas = backup.vendas.map(normalizarVenda);
+
+    localStorage.setItem(CHAVE_PRODUTOS, JSON.stringify(novosProdutos));
+    try {
+      localStorage.setItem(CHAVE_VENDAS, JSON.stringify(novasVendas));
+    } catch (erro) {
+      if (produtosAntigos === null) localStorage.removeItem(CHAVE_PRODUTOS);
+      else localStorage.setItem(CHAVE_PRODUTOS, produtosAntigos);
+      throw erro;
+    }
+
+    produtos = novosProdutos;
+    vendas = novasVendas;
+    atualizarTela();
+    document.getElementById("mensagemBackup").textContent = "Backup restaurado com sucesso!";
+    alert("Backup restaurado com sucesso!");
+  } catch (erro) {
+    try {
+      if (produtosAntigos === null) localStorage.removeItem(CHAVE_PRODUTOS);
+      else localStorage.setItem(CHAVE_PRODUTOS, produtosAntigos);
+      if (vendasAntigas === null) localStorage.removeItem(CHAVE_VENDAS);
+      else localStorage.setItem(CHAVE_VENDAS, vendasAntigas);
+    } catch (erroReversao) {
+      console.error("Não foi possível reverter o armazenamento:", erroReversao);
+    }
+    alert("Não foi possível concluir a restauração. O sistema tentou preservar os dados anteriores.\n" + erro.message);
+  } finally {
+    evento.target.value = "";
+  }
+});
+
+atualizarTela();
 </script>
 </body>
 </html>
