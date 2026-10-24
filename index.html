@@ -3,123 +3,246 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mercado Fácil</title>
+<meta name="theme-color" content="#103d32">
+<title>Mercado Fácil | Gestão inteligente</title>
 <style>
+:root {
+  --green:#116149;
+  --green-dark:#103d32;
+  --green-light:#e8f5ee;
+  --bg:#f4f7f5;
+  --white:#fff;
+  --text:#1c3029;
+  --muted:#74827b;
+  --border:#e3ebe6;
+  --red:#c0392b;
+  --orange:#a96308;
+  --shadow:0 8px 28px rgba(20,60,43,.07);
+}
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:#f3f7f4;color:#17211b}
-header{background:#14532d;color:white;text-align:center;padding:25px 12px}
-header h1{margin:0 0 8px}
-main{max-width:1000px;margin:20px auto;padding:0 12px}
-section,.cartao{background:white;border:1px solid #dce5de;border-radius:12px;padding:16px;margin-bottom:16px}
-h2{color:#14532d;margin-top:0}
-.resumo{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-.cartao span{display:block;color:#647067}
-.cartao strong{display:block;font-size:1.3rem;color:#14532d;margin-top:5px}
-label{display:block;font-weight:bold;margin:10px 0 5px}
-input{width:100%;padding:11px;border:1px solid #cbd5ce;border-radius:8px;font-size:1rem}
-button{background:#166534;color:white;border:0;border-radius:8px;padding:10px 13px;margin:4px 2px;cursor:pointer;font-weight:bold}
-.secundario{background:#e5ece7;color:#183b27}
-.perigo{background:#b91c1c}
-.pequeno{padding:7px;font-size:.85rem}
-table{width:100%;border-collapse:collapse;min-width:600px}
-th,td{text-align:left;padding:10px;border-bottom:1px solid #e5eae6}
-th{background:#f1f7f2}
-.tabela{overflow-x:auto}
-.mensagem{color:#647067;font-size:.92rem}
-.alerta{background:#fff7ed;color:#92400e;padding:12px;border-radius:8px;margin-bottom:16px}
-.ok{background:#dcfce7;color:#14532d}
-.baixo{color:#92400e;font-weight:bold}
-.zero{color:#b91c1c;font-weight:bold}
-.vazio{text-align:center;color:#647067;padding:14px}
-.acoes{display:flex;flex-wrap:wrap;gap:4px}
-footer{text-align:center;color:#647067;padding:15px}
-@media(max-width:600px){
- .resumo{grid-template-columns:1fr}
- section{padding:12px}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+button,input{font:inherit}
+button{cursor:pointer}
+.header{
+  background:linear-gradient(125deg,#103d32,#167858);
+  color:white;padding:25px 18px 45px;
+}
+.header-inner,.container{max-width:1150px;margin:auto}
+.brand{display:flex;align-items:center;gap:13px}
+.logo{
+  width:52px;height:52px;border-radius:16px;
+  background:#ffffff20;border:1px solid #ffffff40;
+  display:grid;place-items:center;font-size:28px;
+}
+.brand h1{font-size:27px;margin:0;letter-spacing:-.8px}
+.brand p{margin:4px 0 0;color:#d1eee1;font-size:13px}
+.header-message{font-size:14px;color:#e0f2e8;margin:20px 0 0}
+.container{padding:0 17px 35px}
+.stats{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:15px;margin-top:-25px;
+}
+.stat,.panel{
+  background:var(--white);border:1px solid var(--border);
+  border-radius:18px;box-shadow:var(--shadow);
+}
+.stat{padding:19px;min-width:0}
+.stat-label{
+  color:var(--muted);font-size:11px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.7px;
+}
+.stat-value{font-size:30px;font-weight:850;margin-top:6px}
+.stat-icon{float:right;font-size:23px}
+.layout{
+  display:grid;grid-template-columns:320px minmax(0,1fr);
+  gap:18px;margin-top:20px;align-items:start;
+}
+.panel{padding:20px;margin-bottom:18px;min-width:0}
+.panel h2{font-size:18px;margin:0;letter-spacing:-.3px}
+.subtitle{font-size:13px;color:var(--muted);margin:6px 0 19px}
+.field{margin-bottom:14px}
+label{display:block;font-size:13px;font-weight:750;margin-bottom:7px}
+input{
+  width:100%;padding:12px 13px;border:1px solid #dce6df;
+  border-radius:11px;background:#fbfdfb;color:var(--text);
+  outline:none;min-width:0;
+}
+input:focus{border-color:var(--green);box-shadow:0 0 0 3px #11614918}
+.btn{
+  border:0;border-radius:10px;padding:11px 14px;
+  font-size:13px;font-weight:750;display:inline-flex;
+  align-items:center;justify-content:center;gap:6px;
+}
+.primary{background:var(--green);color:white}
+.secondary{background:var(--green-light);color:var(--green)}
+.danger{background:#fff0ee;color:var(--red)}
+.small{padding:7px 9px;font-size:11px}
+.actions{display:flex;gap:7px;flex-wrap:wrap}
+.toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;margin-bottom:15px;
+}
+.toolbar input{max-width:300px}
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px}
+table{width:100%;border-collapse:collapse;min-width:550px;background:white}
+th,td{padding:13px 11px;text-align:left;border-bottom:1px solid #edf1ee;font-size:12px}
+th{background:#f7faf8;color:#718078;font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+tbody tr:last-child td{border-bottom:0}
+.badge{display:inline-block;padding:4px 8px;border-radius:30px;background:#e6f6ec;color:#176343;font-size:10px;font-weight:800;margin-top:5px}
+.low{background:#fff1d5;color:#925b06}
+.zero{background:#ffe9e6;color:#b33328}
+.alerts{display:grid;gap:8px;margin-bottom:13px}
+.alert{padding:11px 13px;border-radius:10px;background:#fff1d5;color:#80510a;font-size:12px}
+.alert.error{background:#ffebe8;color:#a32c23}
+.empty{text-align:center;color:var(--muted);padding:25px 10px;font-size:13px}
+.backup-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.help{font-size:11px;color:var(--muted);line-height:1.5;margin:13px 0 0}
+.footer{text-align:center;color:#829087;font-size:11px;padding:8px 15px 28px}
+.toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  background:#163e30;color:white;padding:12px 17px;
+  border-radius:12px;box-shadow:var(--shadow);z-index:10;
+  font-size:13px;max-width:90%;text-align:center;
+}
+.hidden{display:none!important}
+@media(max-width:800px){
+  .layout{grid-template-columns:1fr}
+  .stats{gap:9px}
+  .stat{padding:14px}
+  .stat-value{font-size:25px}
+  .panel{padding:16px}
+}
+@media(max-width:480px){
+  .header{padding:21px 16px 40px}
+  .brand h1{font-size:23px}
+  .logo{width:45px;height:45px}
+  .stats{grid-template-columns:1fr}
+  .stat{display:flex;align-items:center;justify-content:space-between}
+  .stat-value{margin:0}
+  .backup-buttons{grid-template-columns:1fr}
+  .toolbar input{max-width:none}
 }
 </style>
 </head>
 <body>
-<header>
-<h1>🛒 Mercado Fácil</h1>
-<p>Controle de produtos, estoque e vendas</p>
+<header class="header">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="logo">🛒</div>
+      <div>
+        <h1>Mercado Fácil</h1>
+        <p>Gestão inteligente para o seu negócio</p>
+      </div>
+    </div>
+    <p class="header-message">
+      Controle seus produtos, acompanhe as vendas e mantenha seu estoque organizado.
+    </p>
+  </div>
 </header>
 
-<main>
-<div class="resumo">
- <div class="cartao"><span>Produtos cadastrados</span><strong id="totalProdutos">0</strong></div>
- <div class="cartao"><span>Unidades em estoque</span><strong id="totalEstoque">0</strong></div>
- <div class="cartao"><span>Total vendido</span><strong id="totalVendido">R$ 0,00</strong></div>
-</div>
+<main class="container">
+  <section class="stats">
+    <article class="stat">
+      <span class="stat-icon">📦</span>
+      <div class="stat-label">Produtos cadastrados</div>
+      <div class="stat-value" id="totalProdutos">0</div>
+    </article>
+    <article class="stat">
+      <span class="stat-icon">🏷️</span>
+      <div class="stat-label">Unidades em estoque</div>
+      <div class="stat-value" id="totalEstoque">0</div>
+    </article>
+    <article class="stat">
+      <span class="stat-icon">🧾</span>
+      <div class="stat-label">Unidades vendidas</div>
+      <div class="stat-value" id="totalVendido">0</div>
+    </article>
+  </section>
 
-<div id="alertasEstoque" aria-live="polite"></div>
+  <div class="layout">
+    <aside>
+      <section class="panel" id="formPanel">
+        <h2 id="formTitulo">＋ Cadastrar produto</h2>
+        <p class="subtitle">Adicione um produto ao seu estoque.</p>
+        <form id="produtoForm">
+          <div class="field">
+            <label for="nome">Nome do produto</label>
+            <input id="nome" maxlength="100" placeholder="Ex.: Arroz 5 kg" required>
+          </div>
+          <div class="field">
+            <label for="preco">Preço de venda (R$)</label>
+            <input id="preco" type="number" min="0.01" step="0.01" placeholder="Ex.: 24.90" required>
+          </div>
+          <div class="field">
+            <label for="estoque">Quantidade em estoque</label>
+            <input id="estoque" type="number" min="0" step="1" placeholder="Ex.: 20" required>
+          </div>
+          <div class="actions">
+            <button class="btn primary" id="salvarProduto" type="submit">Salvar produto</button>
+            <button class="btn secondary hidden" id="cancelarEdicao" type="button">Cancelar</button>
+          </div>
+        </form>
+      </section>
 
-<section>
-<h2>➕ Cadastrar produto</h2>
-<form id="formProduto">
-<label for="nomeProduto">Nome do produto</label>
-<input id="nomeProduto" required maxlength="100" placeholder="Ex.: Arroz 5 kg">
-<label for="precoProduto">Preço (R$)</label>
-<input id="precoProduto" type="number" min="0.01" step="0.01" required placeholder="Ex.: 24.90">
-<label for="estoqueProduto">Quantidade em estoque</label>
-<input id="estoqueProduto" type="number" min="0" step="1" required placeholder="Ex.: 10">
-<div class="acoes">
-<button type="submit">Salvar produto</button>
-<button type="reset" class="secundario">Limpar</button>
-</div>
-</form>
-<p id="mensagemProduto" class="mensagem" aria-live="polite"></p>
-</section>
+      <section class="panel">
+        <h2>🛡️ Backup dos dados</h2>
+        <p class="subtitle">Proteja seus produtos e seu histórico de vendas.</p>
+        <div class="backup-buttons">
+          <button class="btn primary" id="exportarBackup" type="button">⬇ Fazer backup</button>
+          <button class="btn secondary" id="escolherBackup" type="button">↥ Restaurar</button>
+        </div>
+        <input id="arquivoBackup" class="hidden" type="file" accept=".json,application/json">
+        <p class="help">Guarde o arquivo JSON em local seguro. A restauração substitui os dados atuais pelos dados do arquivo.</p>
+      </section>
+    </aside>
 
-<section>
-<h2>📦 Produtos cadastrados</h2>
-<label for="buscaProduto">Pesquisar produto</label>
-<input id="buscaProduto" type="search" placeholder="Digite o nome do produto">
-<div class="tabela">
-<table>
-<thead><tr><th>Produto</th><th>Preço</th><th>Estoque</th><th>Vender</th><th>Ações</th></tr></thead>
-<tbody id="listaProdutos"></tbody>
-</table>
-</div>
-<p id="vazioProdutos" class="vazio">Nenhum produto cadastrado.</p>
-</section>
+    <div>
+      <section class="panel">
+        <div class="toolbar">
+          <div>
+            <h2>Estoque de produtos</h2>
+            <p class="subtitle">Gerencie seus produtos cadastrados.</p>
+          </div>
+          <input id="busca" type="search" placeholder="🔎 Buscar produto..." aria-label="Buscar produto">
+        </div>
+        <div id="alertas" class="alerts"></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Produto</th><th>Preço</th><th>Estoque</th><th>Ações</th></tr></thead>
+            <tbody id="listaProdutos"></tbody>
+          </table>
+        </div>
+        <div id="semProdutos" class="empty hidden">Nenhum produto encontrado.</div>
+      </section>
 
-<section>
-<h2>🧾 Histórico de vendas</h2>
-<div class="tabela">
-<table>
-<thead><tr><th>Data e hora</th><th>Produto</th><th>Qtd.</th><th>Preço</th><th>Total</th><th>Ação</th></tr></thead>
-<tbody id="listaVendas"></tbody>
-</table>
-</div>
-<p id="vazioVendas" class="vazio">Nenhuma venda registrada.</p>
-</section>
-
-<section>
-<h2>🛡️ Backup e restauração</h2>
-<p>Baixe uma cópia dos produtos e do histórico de vendas. Guarde o arquivo em local seguro.</p>
-<button type="button" id="btnBackup">📥 Fazer backup</button>
-<button type="button" id="btnEscolherBackup" class="secundario">📂 Restaurar backup</button>
-<input type="file" id="arquivoBackup" accept=".json,application/json" hidden>
-<p id="mensagemBackup" class="mensagem" aria-live="polite">Faça backup regularmente.</p>
-<p class="mensagem"><strong>Atenção:</strong> restaurar substitui os dados atuais. O sistema tentará baixar uma cópia antes da restauração.</p>
-</section>
+      <section class="panel">
+        <h2>Histórico de vendas</h2>
+        <p class="subtitle">Consulte as vendas realizadas.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Data e hora</th><th>Produto</th><th>Qtd.</th><th>Total</th><th>Ação</th></tr></thead>
+            <tbody id="listaVendas"></tbody>
+          </table>
+        </div>
+        <div id="semVendas" class="empty hidden">Nenhuma venda registrada ainda.</div>
+      </section>
+    </div>
+  </div>
 </main>
 
-<footer>Mercado Fácil • Dados salvos neste navegador</footer>
+<footer class="footer">Mercado Fácil 2.0 · Gestão simples, prática e organizada</footer>
+<div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
 <script>
 "use strict";
 
 const CHAVE_PRODUTOS = "mercadoFacil";
 const CHAVE_VENDAS = "mercadoFacilVendas";
-const VERSAO_BACKUP = 1;
-const LIMITE_ESTOQUE_BAIXO = 5;
 
-let produtos = lerDados(CHAVE_PRODUTOS).map(normalizarProduto);
-let vendas = lerDados(CHAVE_VENDAS).map(normalizarVenda);
-
-function lerDados(chave) {
+function carregarLista(chave) {
   try {
     const dados = JSON.parse(localStorage.getItem(chave) || "[]");
     return Array.isArray(dados) ? dados : [];
@@ -128,364 +251,317 @@ function lerDados(chave) {
   }
 }
 
-function normalizarProduto(p, i) {
-  return {
-    ...p,
-    id: p.id ?? (Date.now() + i),
-    nome: String(p.nome ?? "Produto"),
-    preco: Number(p.preco) || 0,
-    estoque: Math.max(0, Math.floor(Number(p.estoque) || 0))
-  };
+let produtos = carregarLista(CHAVE_PRODUTOS);
+let vendas = carregarLista(CHAVE_VENDAS);
+let produtoEditando = null;
+let toastTimer;
+
+function novoId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2,8);
 }
 
-function normalizarVenda(v, i) {
-  const quantidade = Number(v.quantidade) || 1;
-  const preco = Number(v.preco) || 0;
-  return {
-    ...v,
-    id: v.id ?? (Date.now() + i),
-    nome: String(v.nome ?? "Produto"),
-    quantidade,
-    preco,
-    total: Number.isFinite(Number(v.total)) ? Number(v.total) : quantidade * preco,
-    data: v.data ?? v.dataHora ?? v.dataVenda ?? new Date().toISOString(),
-    produtoId: v.produtoId ?? null
-  };
+function escapar(valor) {
+  return String(valor ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[c]);
+}
+
+function dinheiro(valor) {
+  return Number(valor || 0).toLocaleString("pt-BR", {
+    style:"currency", currency:"BRL"
+  });
+}
+
+function formatarData(valor) {
+  const data = new Date(valor);
+  return Number.isNaN(data.getTime()) ? "Data indisponível" : data.toLocaleString("pt-BR");
+}
+
+function mostrarToast(mensagem) {
+  const el = document.getElementById("toast");
+  el.textContent = mensagem;
+  el.classList.remove("hidden");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.add("hidden"), 3000);
 }
 
 function salvar() {
   try {
     localStorage.setItem(CHAVE_PRODUTOS, JSON.stringify(produtos));
     localStorage.setItem(CHAVE_VENDAS, JSON.stringify(vendas));
+    return true;
   } catch (erro) {
-    alert("Não foi possível salvar. Faça backup e verifique o espaço disponível.");
     console.error(erro);
+    mostrarToast("Erro ao salvar. Faça um backup dos seus dados.");
+    return false;
   }
-}
-
-function moeda(valor) {
-  return Number(valor || 0).toLocaleString("pt-BR", {
-    style: "currency", currency: "BRL"
-  });
-}
-
-function escapar(valor) {
-  return String(valor ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
-  })[c]);
-}
-
-function formatarData(valor) {
-  const data = new Date(valor);
-  return Number.isNaN(data.getTime()) ? "Data não informada" : data.toLocaleString("pt-BR");
-}
-
-function atualizarResumo() {
-  document.getElementById("totalProdutos").textContent = produtos.length;
-  document.getElementById("totalEstoque").textContent =
-    produtos.reduce((s, p) => s + p.estoque, 0);
-  document.getElementById("totalVendido").textContent =
-    moeda(vendas.reduce((s, v) => s + Number(v.total || 0), 0));
-}
-
-function atualizarAlertas() {
-  const area = document.getElementById("alertasEstoque");
-  const zerados = produtos.filter(p => p.estoque === 0);
-  const baixos = produtos.filter(p => p.estoque > 0 && p.estoque <= LIMITE_ESTOQUE_BAIXO);
-
-  if (!zerados.length && !baixos.length) {
-    area.innerHTML = '<div class="alerta ok">✅ Estoque em dia. Nenhum alerta.</div>';
-    return;
-  }
-
-  let html = '<div class="alerta"><strong>⚠️ Atenção ao estoque</strong>';
-  if (zerados.length) {
-    html += "<p><strong>Sem estoque:</strong></p><ul>" +
-      zerados.map(p => `<li>${escapar(p.nome)}</li>`).join("") + "</ul>";
-  }
-  if (baixos.length) {
-    html += `<p><strong>Estoque baixo (até ${LIMITE_ESTOQUE_BAIXO} unidades):</strong></p><ul>` +
-      baixos.map(p => `<li>${escapar(p.nome)} — ${p.estoque} unidade(s)</li>`).join("") + "</ul>";
-  }
-  area.innerHTML = html + "</div>";
-}
-
-function atualizarProdutos() {
-  const busca = document.getElementById("buscaProduto").value.trim().toLowerCase();
-  const encontrados = produtos.filter(p => p.nome.toLowerCase().includes(busca));
-
-  document.getElementById("listaProdutos").innerHTML = encontrados.map(p => {
-    const classe = p.estoque === 0 ? "zero" : p.estoque <= LIMITE_ESTOQUE_BAIXO ? "baixo" : "";
-    return `<tr>
-      <td>${escapar(p.nome)}</td>
-      <td>${moeda(p.preco)}</td>
-      <td class="${classe}">${p.estoque}</td>
-      <td><button class="pequeno" data-acao="vender" data-id="${escapar(p.id)}" ${p.estoque <= 0 ? "disabled" : ""}>Vender</button></td>
-      <td>
-        <button class="pequeno secundario" data-acao="editar" data-id="${escapar(p.id)}">Editar</button>
-        <button class="pequeno perigo" data-acao="excluir" data-id="${escapar(p.id)}">Excluir</button>
-      </td>
-    </tr>`;
-  }).join("");
-
-  document.getElementById("vazioProdutos").hidden = encontrados.length > 0;
-}
-
-function atualizarVendas() {
-  const ordenadas = [...vendas].sort((a,b) => new Date(b.data) - new Date(a.data));
-  document.getElementById("listaVendas").innerHTML = ordenadas.map(v => `
-    <tr>
-      <td>${escapar(formatarData(v.data))}</td>
-      <td>${escapar(v.nome)}</td>
-      <td>${v.quantidade}</td>
-      <td>${moeda(v.preco)}</td>
-      <td>${moeda(v.total)}</td>
-      <td><button class="pequeno perigo" data-acao-venda="excluir" data-id="${escapar(v.id)}">Excluir venda</button></td>
-    </tr>`).join("");
-  document.getElementById("vazioVendas").hidden = ordenadas.length > 0;
 }
 
 function atualizarTela() {
-  atualizarResumo();
-  atualizarAlertas();
-  atualizarProdutos();
-  atualizarVendas();
+  document.getElementById("totalProdutos").textContent = produtos.length;
+  document.getElementById("totalEstoque").textContent =
+    produtos.reduce((s,p) => s + Math.max(0, Number(p.estoque)||0), 0);
+  document.getElementById("totalVendido").textContent =
+    vendas.reduce((s,v) => s + Math.max(0, Number(v.quantidade)||0), 0);
+
+  renderizarProdutos();
+  renderizarVendas();
+  renderizarAlertas();
   salvar();
 }
 
-document.getElementById("formProduto").addEventListener("submit", evento => {
-  evento.preventDefault();
-  const nome = document.getElementById("nomeProduto").value.trim();
-  const preco = Number(document.getElementById("precoProduto").value);
-  const estoque = Number(document.getElementById("estoqueProduto").value);
+function renderizarProdutos() {
+  const termo = document.getElementById("busca").value.trim().toLowerCase();
+  const lista = produtos.filter(p => String(p.nome||"").toLowerCase().includes(termo));
+  const tbody = document.getElementById("listaProdutos");
+
+  tbody.innerHTML = lista.map(p => {
+    const qtd = Math.max(0, Number(p.estoque)||0);
+    const classe = qtd === 0 ? "zero" : qtd <= 5 ? "low" : "";
+    const status = qtd === 0 ? "Sem estoque" : qtd <= 5 ? "Estoque baixo" : "Disponível";
+
+    return `<tr>
+      <td><strong>${escapar(p.nome)}</strong><br><span class="badge ${classe}">${status}</span></td>
+      <td>${dinheiro(p.preco)}</td>
+      <td><strong>${qtd}</strong></td>
+      <td><div class="actions">
+        <button class="btn primary small" data-acao="vender" data-id="${escapar(p.id)}" ${qtd < 1 ? "disabled" : ""}>Vender</button>
+        <button class="btn secondary small" data-acao="editar" data-id="${escapar(p.id)}">Editar</button>
+        <button class="btn danger small" data-acao="excluir" data-id="${escapar(p.id)}">Excluir</button>
+      </div></td>
+    </tr>`;
+  }).join("");
+
+  document.getElementById("semProdutos").classList.toggle("hidden", lista.length > 0);
+}
+
+function renderizarVendas() {
+  const lista = [...vendas].sort((a,b) => new Date(b.data)-new Date(a.data));
+  document.getElementById("listaVendas").innerHTML = lista.map(v => `
+    <tr>
+      <td>${escapar(formatarData(v.data))}</td>
+      <td><strong>${escapar(v.nomeProduto || v.produtoNome || "Produto removido")}</strong></td>
+      <td>${Math.max(0, Number(v.quantidade)||0)}</td>
+      <td>${dinheiro(v.total)}</td>
+      <td><button class="btn danger small" data-acao="excluir-venda" data-id="${escapar(v.id)}">Excluir venda</button></td>
+    </tr>`).join("");
+
+  document.getElementById("semVendas").classList.toggle("hidden", lista.length > 0);
+}
+
+function renderizarAlertas() {
+  const zerados = produtos.filter(p => Number(p.estoque) <= 0);
+  const baixos = produtos.filter(p => Number(p.estoque) > 0 && Number(p.estoque) <= 5);
+  const avisos = [];
+
+  if (zerados.length) {
+    avisos.push(`<div class="alert error"><strong>⚠ Sem estoque:</strong> ${zerados.map(p=>escapar(p.nome)).join(", ")}</div>`);
+  }
+  if (baixos.length) {
+    avisos.push(`<div class="alert"><strong>📉 Estoque baixo:</strong> ${baixos.map(p=>`${escapar(p.nome)} (${Number(p.estoque)})`).join(", ")}</div>`);
+  }
+  document.getElementById("alertas").innerHTML = avisos.join("");
+}
+
+function limparFormulario() {
+  document.getElementById("produtoForm").reset();
+  produtoEditando = null;
+  document.getElementById("formTitulo").textContent = "＋ Cadastrar produto";
+  document.getElementById("salvarProduto").textContent = "Salvar produto";
+  document.getElementById("cancelarEdicao").classList.add("hidden");
+}
+
+document.getElementById("produtoForm").addEventListener("submit", e => {
+  e.preventDefault();
+
+  const nome = document.getElementById("nome").value.trim();
+  const preco = Number(document.getElementById("preco").value);
+  const estoque = Number(document.getElementById("estoque").value);
 
   if (!nome || !Number.isFinite(preco) || preco <= 0 ||
       !Number.isInteger(estoque) || estoque < 0) {
-    alert("Confira o nome, o preço e a quantidade informados.");
+    mostrarToast("Confira o nome, o preço e a quantidade.");
     return;
   }
 
-  produtos.push({ id: Date.now(), nome, preco, estoque });
+  if (produtoEditando !== null) {
+    const p = produtos.find(x => String(x.id) === String(produtoEditando));
+    if (p) Object.assign(p, {nome, preco, estoque});
+    mostrarToast("Produto atualizado!");
+  } else {
+    produtos.push({id:novoId(), nome, preco, estoque});
+    mostrarToast("Produto cadastrado!");
+  }
+
+  limparFormulario();
   atualizarTela();
-  evento.target.reset();
-  document.getElementById("mensagemProduto").textContent = "Produto cadastrado com sucesso!";
 });
 
-document.getElementById("buscaProduto").addEventListener("input", atualizarProdutos);
+document.getElementById("cancelarEdicao").addEventListener("click", limparFormulario);
+document.getElementById("busca").addEventListener("input", renderizarProdutos);
 
-document.getElementById("listaProdutos").addEventListener("click", evento => {
-  const botao = evento.target.closest("button[data-acao]");
+document.getElementById("listaProdutos").addEventListener("click", e => {
+  const botao = e.target.closest("button[data-acao]");
   if (!botao) return;
 
-  const produto = produtos.find(p => String(p.id) === botao.dataset.id);
-  if (!produto) return;
+  const id = botao.dataset.id;
+  const p = produtos.find(x => String(x.id) === String(id));
+  if (!p) return;
+
+  if (botao.dataset.acao === "vender") {
+    const resposta = prompt(`Quantas unidades de "${p.nome}" deseja vender?`, "1");
+    if (resposta === null) return;
+
+    const qtd = Number(resposta);
+    if (!Number.isInteger(qtd) || qtd < 1) {
+      mostrarToast("Informe uma quantidade inteira válida.");
+      return;
+    }
+    if (qtd > Number(p.estoque)) {
+      mostrarToast("Estoque insuficiente.");
+      return;
+    }
+
+    p.estoque = Number(p.estoque) - qtd;
+    vendas.push({
+      id:novoId(), produtoId:p.id, nomeProduto:p.nome,
+      quantidade:qtd, precoUnitario:Number(p.preco),
+      total:Number((qtd*Number(p.preco)).toFixed(2)),
+      data:new Date().toISOString()
+    });
+    atualizarTela();
+    mostrarToast("Venda registrada com sucesso!");
+  }
 
   if (botao.dataset.acao === "editar") {
-    const nome = prompt("Novo nome:", produto.nome);
-    if (nome === null) return;
-    if (!nome.trim()) { alert("O nome não pode ficar vazio."); return; }
-
-    const precoTexto = prompt("Novo preço:", String(produto.preco).replace(".", ","));
-    if (precoTexto === null) return;
-    const preco = Number(precoTexto.replace(",", "."));
-    if (!Number.isFinite(preco) || preco <= 0) { alert("Preço inválido."); return; }
-
-    const estoqueTexto = prompt("Novo estoque:", String(produto.estoque));
-    if (estoqueTexto === null) return;
-    const estoque = Number(estoqueTexto);
-    if (!Number.isInteger(estoque) || estoque < 0) { alert("Estoque inválido."); return; }
-
-    if (!confirm("Confirma a atualização do produto?")) return;
-    produto.nome = nome.trim();
-    produto.preco = preco;
-    produto.estoque = estoque;
-    atualizarTela();
-    alert("Produto atualizado com sucesso!");
+    produtoEditando = p.id;
+    document.getElementById("nome").value = p.nome || "";
+    document.getElementById("preco").value = Number(p.preco) || "";
+    document.getElementById("estoque").value = Number(p.estoque) || 0;
+    document.getElementById("formTitulo").textContent = "Editar produto";
+    document.getElementById("salvarProduto").textContent = "Salvar alterações";
+    document.getElementById("cancelarEdicao").classList.remove("hidden");
+    document.getElementById("formPanel").scrollIntoView({behavior:"smooth"});
   }
 
   if (botao.dataset.acao === "excluir") {
-    if (!confirm(`Deseja excluir "${produto.nome}"? O histórico de vendas será mantido.`)) return;
-    produtos = produtos.filter(p => String(p.id) !== String(produto.id));
+    if (!confirm(`Excluir "${p.nome}"? O histórico de vendas será mantido.`)) return;
+    produtos = produtos.filter(x => String(x.id) !== String(id));
+    if (String(produtoEditando) === String(id)) limparFormulario();
     atualizarTela();
-  }
-
-  if (botao.dataset.acao === "vender") {
-    const texto = prompt(`Quantidade para vender. Estoque disponível: ${produto.estoque}`, "1");
-    if (texto === null) return;
-    const quantidade = Number(texto);
-    if (!Number.isInteger(quantidade) || quantidade <= 0) { alert("Quantidade inválida."); return; }
-    if (quantidade > produto.estoque) { alert("Estoque insuficiente."); return; }
-
-    const total = quantidade * produto.preco;
-    if (!confirm(`Confirmar venda de ${quantidade} unidade(s) de ${produto.nome} por ${moeda(total)}?`)) return;
-
-    produto.estoque -= quantidade;
-    vendas.push({
-      id: Date.now(),
-      produtoId: produto.id,
-      nome: produto.nome,
-      quantidade,
-      preco: produto.preco,
-      total,
-      data: new Date().toISOString()
-    });
-    atualizarTela();
-    alert("Venda registrada com sucesso!");
+    mostrarToast("Produto excluído.");
   }
 });
 
-document.getElementById("listaVendas").addEventListener("click", evento => {
-  const botao = evento.target.closest("button[data-acao-venda]");
+document.getElementById("listaVendas").addEventListener("click", e => {
+  const botao = e.target.closest('button[data-acao="excluir-venda"]');
   if (!botao) return;
-  const venda = vendas.find(v => String(v.id) === botao.dataset.id);
+
+  const venda = vendas.find(v => String(v.id) === String(botao.dataset.id));
   if (!venda) return;
 
-  if (!confirm(`Excluir a venda de "${venda.nome}"? Se o produto ainda existir, o estoque será devolvido.`)) return;
-  if (venda.produtoId != null) {
-    const produto = produtos.find(p => String(p.id) === String(venda.produtoId));
-    if (produto) produto.estoque += venda.quantidade;
-  }
+  if (!confirm("Excluir esta venda? Se o produto ainda existir, a quantidade voltará ao estoque.")) return;
+
+  const p = produtos.find(x => String(x.id) === String(venda.produtoId));
+  if (p) p.estoque = Math.max(0, Number(p.estoque)||0) + Math.max(0, Number(venda.quantidade)||0);
+
   vendas = vendas.filter(v => String(v.id) !== String(venda.id));
   atualizarTela();
+  mostrarToast("Venda excluída.");
 });
 
-// ===== BACKUP E RESTAURAÇÃO =====
-function criarBackup() {
+function baixarArquivo(nome, conteudo, tipo) {
+  const blob = new Blob([conteudo], {type:tipo});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = nome;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function dadosBackup() {
   return {
-    aplicacao: "Mercado Fácil",
-    versaoBackup: VERSAO_BACKUP,
-    dataBackup: new Date().toISOString(),
+    aplicacao:"Mercado Fácil",
+    versaoBackup:1,
+    dataBackup:new Date().toISOString(),
     produtos,
     vendas
   };
 }
 
-function nomeArquivoBackup(prefixo) {
+function exportarBackup(silencioso=false) {
   const d = new Date();
-  const data = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-  const hora = `${String(d.getHours()).padStart(2,"0")}-${String(d.getMinutes()).padStart(2,"0")}-${String(d.getSeconds()).padStart(2,"0")}`;
-  return `${prefixo}-${data}-${hora}.json`;
-}
+  const pad = n => String(n).padStart(2,"0");
+  const nome = `mercado-facil-backup-${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}-${pad(d.getHours())}-${pad(d.getMinutes())}-${pad(d.getSeconds())}.json`;
 
-function baixarBackup(dados, nome) {
-  const blob = new Blob([JSON.stringify(dados, null, 2)], {type:"application/json;charset=utf-8"});
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = nome;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1500);
-}
-
-function validarBackup(dados) {
-  if (!dados || dados.aplicacao !== "Mercado Fácil" ||
-      dados.versaoBackup !== VERSAO_BACKUP ||
-      !Array.isArray(dados.produtos) || !Array.isArray(dados.vendas)) {
-    throw new Error("Arquivo inválido ou incompatível.");
-  }
-
-  const idsProdutos = new Set();
-  for (const p of dados.produtos) {
-    if (!p || p.id == null || typeof p.nome !== "string" || !p.nome.trim() ||
-        !Number.isFinite(Number(p.preco)) || Number(p.preco) <= 0 ||
-        !Number.isInteger(Number(p.estoque)) || Number(p.estoque) < 0) {
-      throw new Error("O backup contém um produto inválido.");
-    }
-    if (idsProdutos.has(String(p.id))) throw new Error("Há identificadores repetidos nos produtos.");
-    idsProdutos.add(String(p.id));
-  }
-
-  const idsVendas = new Set();
-  for (const v of dados.vendas) {
-    if (!v || v.id == null || typeof v.nome !== "string" ||
-        !Number.isFinite(Number(v.quantidade)) || Number(v.quantidade) <= 0 ||
-        !Number.isFinite(Number(v.preco)) || Number(v.preco) < 0 ||
-        !Number.isFinite(Number(v.total)) || Number(v.total) < 0) {
-      throw new Error("O backup contém uma venda inválida.");
-    }
-    if (idsVendas.has(String(v.id))) throw new Error("Há identificadores repetidos nas vendas.");
-    idsVendas.add(String(v.id));
-  }
-}
-
-document.getElementById("btnBackup").addEventListener("click", () => {
   try {
-    baixarBackup(criarBackup(), nomeArquivoBackup("mercado-facil-backup"));
-    document.getElementById("mensagemBackup").textContent =
-      "Backup preparado. Confira se o arquivo JSON foi baixado.";
+    baixarArquivo(nome, JSON.stringify(dadosBackup(), null, 2), "application/json;charset=utf-8");
+    if (!silencioso) mostrarToast("Backup preparado para download.");
   } catch (erro) {
-    alert("Erro ao gerar backup: " + erro.message);
+    console.error(erro);
+    mostrarToast("Não foi possível gerar o backup.");
   }
-});
+}
 
-document.getElementById("btnEscolherBackup").addEventListener("click", () => {
+document.getElementById("exportarBackup").addEventListener("click", () => exportarBackup());
+document.getElementById("escolherBackup").addEventListener("click", () => {
   document.getElementById("arquivoBackup").click();
 });
 
-document.getElementById("arquivoBackup").addEventListener("change", async evento => {
-  const arquivo = evento.target.files && evento.target.files[0];
+document.getElementById("arquivoBackup").addEventListener("change", async function() {
+  const arquivo = this.files && this.files[0];
   if (!arquivo) return;
 
-  let backup;
   try {
-    backup = JSON.parse(await arquivo.text());
-    validarBackup(backup);
-  } catch (erro) {
-    alert("Não foi possível restaurar o arquivo.\n" + erro.message);
-    evento.target.value = "";
-    return;
-  }
+    const dados = JSON.parse(await arquivo.text());
 
-  if (!confirm(
-    "ATENÇÃO: os dados atuais serão substituídos.\n\n" +
-    `Data do backup: ${formatarData(backup.dataBackup)}\n` +
-    `Produtos: ${backup.produtos.length}\nVendas: ${backup.vendas.length}\n\n` +
-    "Deseja continuar?"
-  )) {
-    evento.target.value = "";
-    return;
-  }
-
-  const produtosAntigos = localStorage.getItem(CHAVE_PRODUTOS);
-  const vendasAntigas = localStorage.getItem(CHAVE_VENDAS);
-
-  try {
-    baixarBackup(criarBackup(), nomeArquivoBackup("mercado-facil-seguranca"));
-
-    const novosProdutos = backup.produtos.map(normalizarProduto);
-    const novasVendas = backup.vendas.map(normalizarVenda);
-
-    localStorage.setItem(CHAVE_PRODUTOS, JSON.stringify(novosProdutos));
-    try {
-      localStorage.setItem(CHAVE_VENDAS, JSON.stringify(novasVendas));
-    } catch (erro) {
-      if (produtosAntigos === null) localStorage.removeItem(CHAVE_PRODUTOS);
-      else localStorage.setItem(CHAVE_PRODUTOS, produtosAntigos);
-      throw erro;
+    if (!dados || dados.aplicacao !== "Mercado Fácil" ||
+        !Array.isArray(dados.produtos) || !Array.isArray(dados.vendas)) {
+      throw new Error("Formato inválido");
     }
 
-    produtos = novosProdutos;
-    vendas = novasVendas;
+    const produtosValidos = dados.produtos.every(p =>
+      p && typeof p.nome === "string" &&
+      Number.isFinite(Number(p.preco)) &&
+      Number.isFinite(Number(p.estoque))
+    );
+    const vendasValidas = dados.vendas.every(v =>
+      v && Number.isFinite(Number(v.quantidade)) &&
+      Number.isFinite(Number(v.total))
+    );
+    if (!produtosValidos || !vendasValidas) throw new Error("Dados inválidos");
+
+    if (!confirm(`Restaurar ${dados.produtos.length} produto(s) e ${dados.vendas.length} venda(s)? Os dados atuais serão substituídos. Será tentado um backup de segurança antes da troca.`)) return;
+
+    exportarBackup(true);
+
+    const produtosAnteriores = produtos;
+    const vendasAnteriores = vendas;
+    produtos = dados.produtos;
+    vendas = dados.vendas;
+
+    if (!salvar()) {
+      produtos = produtosAnteriores;
+      vendas = vendasAnteriores;
+      salvar();
+      throw new Error("Falha ao salvar");
+    }
+
+    limparFormulario();
     atualizarTela();
-    document.getElementById("mensagemBackup").textContent = "Backup restaurado com sucesso!";
-    alert("Backup restaurado com sucesso!");
+    mostrarToast("Backup restaurado!");
   } catch (erro) {
-    try {
-      if (produtosAntigos === null) localStorage.removeItem(CHAVE_PRODUTOS);
-      else localStorage.setItem(CHAVE_PRODUTOS, produtosAntigos);
-      if (vendasAntigas === null) localStorage.removeItem(CHAVE_VENDAS);
-      else localStorage.setItem(CHAVE_VENDAS, vendasAntigas);
-    } catch (erroReversao) {
-      console.error("Não foi possível reverter o armazenamento:", erroReversao);
-    }
-    alert("Não foi possível concluir a restauração. O sistema tentou preservar os dados anteriores.\n" + erro.message);
+    console.error(erro);
+    alert("Não foi possível restaurar. Escolha um arquivo JSON válido do Mercado Fácil.");
   } finally {
-    evento.target.value = "";
+    this.value = "";
   }
 });
 
+// Preserva os nomes de armazenamento usados pela versão anterior.
 atualizarTela();
 </script>
 </body>
