@@ -2,355 +2,544 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mercado Fácil</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;padding:16px;font-family:Arial,sans-serif;background:#f0f4f8;color:#222}
-.container{max-width:800px;margin:auto}
-header{background:#14532d;color:white;padding:22px;border-radius:14px}
-header h1{margin:0 0 8px}
-header p{margin:0}
-section{background:white;padding:18px;margin-top:16px;border-radius:12px;box-shadow:0 3px 12px #0001}
-h2{color:#167447;margin-top:0;font-size:20px}
-label{display:block;font-weight:bold;margin:12px 0 6px}
-input,select{width:100%;padding:12px;border:1px solid #ccc;border-radius:7px;font-size:16px;background:white}
-button{padding:12px;border:0;border-radius:7px;font-size:15px;font-weight:bold;cursor:pointer;margin:5px 4px 5px 0}
-.primary{background:#167447;color:white}
-.secondary{background:#526579;color:white}
-.danger{background:#b83232;color:white}
-.product,.sale{padding:12px 0;border-bottom:1px solid #ddd;overflow-wrap:anywhere}
-.summary{background:#e5f4eb;padding:14px;margin:10px 0;border-radius:8px;font-weight:bold}
-.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.stat{background:#f0fdf4;padding:12px;border-radius:8px}
-.stat span{display:block;font-size:13px;color:#526579}
-.stat strong{display:block;margin-top:6px;color:#166534;font-size:19px}
-.muted{color:#64748b;font-size:14px}
-.warning{color:#a93226}
-@media(min-width:600px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
+:root {
+  --verde: #167d45;
+  --escuro: #105d33;
+  --fundo: #f3f7f4;
+  --borda: #dce6df;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--fundo);
+  color: #1d2a22;
+}
+header {
+  background: linear-gradient(135deg, var(--verde), var(--escuro));
+  color: white;
+  text-align: center;
+  padding: 25px 15px;
+}
+header h1 { margin: 0 0 8px; }
+header p { margin: 0; }
+main {
+  width: min(100% - 24px, 1000px);
+  margin: 20px auto 35px;
+}
+.resumo {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.numero, .painel {
+  background: white;
+  border: 1px solid var(--borda);
+  border-radius: 14px;
+  box-shadow: 0 3px 12px #183b2510;
+}
+.numero { padding: 16px 10px; text-align: center; }
+.numero span {
+  display: block;
+  color: #5d6d62;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+.numero strong { font-size: clamp(18px, 3vw, 26px); }
+.painel { padding: 18px; margin-bottom: 18px; }
+h2 { margin: 0 0 15px; font-size: 21px; }
+.grade {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+input, select, button { font: inherit; }
+input, select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cbd8ce;
+  border-radius: 9px;
+  background: white;
+  min-width: 0;
+}
+button {
+  border: 0;
+  border-radius: 9px;
+  padding: 12px 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.principal { background: var(--verde); color: white; }
+.principal:hover { background: var(--escuro); }
+.secundario { background: #e8eee9; color: #24382a; }
+.acoes {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+.aviso { font-size: 13px; color: #657268; margin: 10px 0 0; }
+.topo-lista {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.topo-lista h2 { margin: 0; }
+.topo-lista input { max-width: 340px; }
+.tabela-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 500px; }
+th, td {
+  text-align: left;
+  padding: 11px 9px;
+  border-bottom: 1px solid #e7eee8;
+  font-size: 14px;
+}
+th { background: #f7faf7; color: #536358; }
+.vazio { text-align: center; color: #6b786e; padding: 22px; }
+.estoque-baixo { color: #b45309; font-weight: bold; }
+.historico {
+  padding: 12px 0;
+  border-bottom: 1px solid #e7eee8;
+}
+.historico:last-child { border-bottom: 0; }
+.historico strong { display: block; margin-bottom: 5px; }
+.historico small { color: #647267; }
+#mensagem {
+  display: none;
+  padding: 12px;
+  border-radius: 9px;
+  margin-bottom: 14px;
+}
+#mensagem.sucesso { display: block; background: #e3f5e9; color: #14532d; }
+#mensagem.erro { display: block; background: #fff0ee; color: #9f2418; }
+footer {
+  text-align: center;
+  color: #6a786d;
+  padding: 0 12px 24px;
+  font-size: 13px;
+}
+@media (max-width: 700px) {
+  .resumo { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grade { grid-template-columns: 1fr; }
+  .painel { padding: 15px; }
+}
 </style>
 </head>
 <body>
-<main class="container">
+
 <header>
-<h1>🛒 Mercado Fácil</h1>
-<p>Cadastro, estoque e controle de vendas</p>
+  <h1>🛒 Mercado Fácil</h1>
+  <p>Controle simples de produtos, estoque e vendas</p>
 </header>
 
-<section>
-<h2>📦 Cadastrar produto</h2>
-<form id="formProduto">
-<label for="nome">Nome do produto</label>
-<input id="nome" required placeholder="Ex.: Arroz">
-<label for="preco">Preço de venda (R$)</label>
-<input id="preco" type="number" min="0.01" step="0.01" required placeholder="25,00">
-<label for="estoque">Quantidade em estoque</label>
-<input id="estoque" type="number" min="0" step="1" required placeholder="10">
-<button class="primary" type="submit">Cadastrar produto</button>
-<button class="secondary" id="limpar" type="button">Limpar campos</button>
-</form>
-</section>
+<main>
+  <div id="mensagem" role="status" aria-live="polite"></div>
 
-<section>
-<h2>📋 Produtos cadastrados</h2>
-<label for="busca">🔎 Buscar produto</label>
-<input id="busca" placeholder="Digite o nome do produto">
-<p id="resumoEstoque" class="muted"></p>
-<div id="lista"></div>
-</section>
+  <section class="resumo">
+    <div class="numero">
+      <span>Produtos cadastrados</span>
+      <strong id="totalProdutos">0</strong>
+    </div>
+    <div class="numero">
+      <span>Unidades em estoque</span>
+      <strong id="totalEstoque">0</strong>
+    </div>
+    <div class="numero">
+      <span>Total vendido</span>
+      <strong id="totalVendido">R$ 0,00</strong>
+    </div>
+    <div class="numero">
+      <span>Vendas de hoje</span>
+      <strong id="vendasHoje">R$ 0,00</strong>
+    </div>
+  </section>
 
-<section>
-<h2>🧾 Registrar venda</h2>
-<label for="produtoVenda">Escolha o produto</label>
-<select id="produtoVenda"></select>
-<p id="previsao" class="summary">Selecione um produto</p>
-<label for="quantidadeVenda">Quantidade vendida</label>
-<input id="quantidadeVenda" type="number" min="1" step="1" placeholder="Ex.: 2">
-<button class="primary" id="registrar" type="button">Registrar venda</button>
-<p id="mensagem" role="status"></p>
-</section>
+  <section class="painel">
+    <h2>📦 Cadastrar produto</h2>
+    <form id="formProduto">
+      <div class="grade">
+        <div>
+          <label for="nomeProduto">Nome do produto</label>
+          <input id="nomeProduto" maxlength="80"
+            placeholder="Ex.: Arroz" required>
+        </div>
+        <div>
+          <label for="precoProduto">Preço (R$)</label>
+          <input id="precoProduto" type="number"
+            min="0.01" step="0.01" placeholder="Ex.: 25,00" required>
+        </div>
+        <div>
+          <label for="estoqueProduto">Quantidade em estoque</label>
+          <input id="estoqueProduto" type="number"
+            min="0" step="1" placeholder="Ex.: 10" required>
+        </div>
+      </div>
+      <div class="acoes">
+        <button class="principal" type="submit">Cadastrar produto</button>
+        <button class="secundario" type="reset">Limpar campos</button>
+      </div>
+      <p class="aviso">
+        Se o produto já existir com o mesmo preço, a nova quantidade será somada ao estoque.
+      </p>
+    </form>
+  </section>
 
-<section>
-<h2>💰 Resumo das vendas</h2>
-<div class="stats">
-<div class="stat"><span>Total vendido</span><strong id="totalGeral">R$ 0,00</strong></div>
-<div class="stat"><span>Vendas registradas</span><strong id="qtdGeral">0</strong></div>
-<div class="stat"><span>Vendido hoje</span><strong id="totalHoje">R$ 0,00</strong></div>
-<div class="stat"><span>Vendas de hoje</span><strong id="qtdHoje">0</strong></div>
-</div>
-</section>
+  <section class="painel">
+    <div class="topo-lista">
+      <h2>📋 Produtos e estoque</h2>
+      <input id="buscarProduto" type="search"
+        placeholder="🔎 Buscar produto..." aria-label="Buscar produto">
+    </div>
+    <div class="tabela-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Preço</th>
+            <th>Estoque</th>
+            <th>Valor em estoque</th>
+          </tr>
+        </thead>
+        <tbody id="listaProdutos"></tbody>
+      </table>
+    </div>
+  </section>
 
-<section>
-<h2>📚 Histórico de vendas</h2>
-<div id="historico"></div>
-</section>
+  <section class="painel">
+    <h2>💰 Registrar venda</h2>
+    <form id="formVenda">
+      <div class="grade">
+        <div>
+          <label for="produtoVenda">Produto</label>
+          <select id="produtoVenda" required>
+            <option value="">Cadastre um produto primeiro</option>
+          </select>
+        </div>
+        <div>
+          <label for="quantidadeVenda">Quantidade</label>
+          <input id="quantidadeVenda" type="number"
+            min="1" step="1" value="1" required>
+        </div>
+        <div>
+          <label for="precoVenda">Preço unitário</label>
+          <input id="precoVenda" value="R$ 0,00" readonly>
+        </div>
+      </div>
+      <div class="acoes">
+        <button class="principal" type="submit">Registrar venda</button>
+      </div>
+    </form>
+    <p class="aviso">
+      Ao registrar uma venda, o estoque é atualizado automaticamente.
+    </p>
+  </section>
+
+  <section class="painel">
+    <h2>🧾 Histórico de vendas</h2>
+    <div id="historicoVendas"></div>
+  </section>
 </main>
 
+<footer>Mercado Fácil • Projeto de estudo em HTML, CSS e JavaScript</footer>
+
 <script>
+"use strict";
+
 const CHAVE_PRODUTOS = "mercadoFacil";
 const CHAVE_VENDAS = "mercadoFacilVendas";
 
-function lerDados(chave){
-  try{
-    const valor=JSON.parse(localStorage.getItem(chave)||"[]");
-    return Array.isArray(valor)?valor:[];
-  }catch(e){return [];}
+function lerDados(chave) {
+  try {
+    const dados = JSON.parse(localStorage.getItem(chave) || "[]");
+    return Array.isArray(dados) ? dados : [];
+  } catch (erro) {
+    console.error("Erro ao ler dados:", erro);
+    return [];
+  }
 }
 
-let produtos=lerDados(CHAVE_PRODUTOS);
-let vendas=lerDados(CHAVE_VENDAS);
+let produtos = lerDados(CHAVE_PRODUTOS);
+let vendas = lerDados(CHAVE_VENDAS);
+let temporizadorMensagem;
 
-function dinheiro(n){
-  return Number(n||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
-}
-function chaveNome(nome){
-  return String(nome||"").trim().toLocaleLowerCase("pt-BR");
-}
-function salvar(){
-  localStorage.setItem(CHAVE_PRODUTOS,JSON.stringify(produtos));
-  localStorage.setItem(CHAVE_VENDAS,JSON.stringify(vendas));
+function salvarDados() {
+  localStorage.setItem(CHAVE_PRODUTOS, JSON.stringify(produtos));
+  localStorage.setItem(CHAVE_VENDAS, JSON.stringify(vendas));
 }
 
-/* Consolida produtos repetidos e soma os estoques.
-   Preserva as vendas existentes sem registrá-las novamente. */
-function consolidarDuplicados(){
-  const mapa=new Map();
-  produtos.forEach((p,i)=>{
-    const nome=String(p.nome||p.produto||"").trim();
-    if(!nome)return;
-    const chave=chaveNome(nome);
-    const estoque=Math.max(0,Number(p.estoque)||0);
-    const preco=Number(p.preco??p.precoUnitario)||0;
+function criarId() {
+  return window.crypto && crypto.randomUUID
+    ? crypto.randomUUID()
+    : String(Date.now()) + Math.random().toString(16).slice(2);
+}
 
-    if(!mapa.has(chave)){
-      mapa.set(chave,{
-        id:p.id??("produto-"+i+"-"+chave),
-        nome:nome,
-        preco:preco,
-        estoque:estoque
+function dinheiro(valor) {
+  return Number(valor || 0).toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL"
+  });
+}
+
+function escaparHTML(valor) {
+  return String(valor ?? "").replace(/[&<>"']/g, caractere => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[caractere]);
+}
+
+function mostrarMensagem(texto, tipo = "sucesso") {
+  const elemento = document.getElementById("mensagem");
+  elemento.textContent = texto;
+  elemento.className = tipo;
+  clearTimeout(temporizadorMensagem);
+
+  temporizadorMensagem = setTimeout(() => {
+    elemento.className = "";
+    elemento.textContent = "";
+  }, 4000);
+}
+
+// Junta produtos repetidos com o mesmo nome e preço.
+// Mantém o histórico de vendas existente.
+function consolidarDuplicados() {
+  const agrupados = new Map();
+
+  produtos.forEach(produto => {
+    if (!produto || !String(produto.nome || "").trim()) return;
+
+    const nome = String(produto.nome).trim();
+    const preco = Number(produto.preco);
+    const estoque = Math.max(0, Math.floor(Number(produto.estoque) || 0));
+    const chave = nome.toLocaleLowerCase("pt-BR") + "|" + preco.toFixed(2);
+
+    if (!agrupados.has(chave)) {
+      agrupados.set(chave, {
+        id: produto.id || criarId(),
+        nome,
+        preco: Number.isFinite(preco) ? preco : 0,
+        estoque
       });
-    }else{
-      mapa.get(chave).estoque+=estoque;
+    } else {
+      agrupados.get(chave).estoque += estoque;
     }
   });
-  produtos=Array.from(mapa.values());
-  salvar();
+
+  produtos = Array.from(agrupados.values());
+  salvarDados();
 }
 
-function dataLocalISO(data){
-  const d=new Date(data);
-  if(Number.isNaN(d.getTime()))return "";
-  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-}
-function dataVendaISO(v){
-  if(v.dataISO && /^\d{4}-\d{2}-\d{2}$/.test(v.dataISO))return v.dataISO;
-  const original=String(v.data||v.dataVenda||v.dataHora||"");
-  const br=original.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
-  if(br)return br[3]+"-"+br[2]+"-"+br[1];
-  return dataLocalISO(original);
-}
-function nomeVenda(v){
-  return v.produto||v.nome||v.produtoNome||"Produto";
-}
-function precoVenda(v){
-  return Number(v.precoUnitario??v.preco)||0;
-}
-function quantidadeVenda(v){
-  return Number(v.quantidade)||0;
-}
-function totalVenda(v){
-  if(v.total!==undefined)return Number(v.total)||0;
-  return precoVenda(v)*quantidadeVenda(v);
-}
+function atualizarResumo() {
+  document.getElementById("totalProdutos").textContent = produtos.length;
 
-function renderizarProdutos(){
-  const busca=chaveNome(document.getElementById("busca").value);
-  const lista=document.getElementById("lista");
-  lista.replaceChildren();
+  document.getElementById("totalEstoque").textContent =
+    produtos.reduce((soma, p) => soma + Number(p.estoque || 0), 0);
 
-  const unidades=produtos.reduce((s,p)=>s+(Number(p.estoque)||0),0);
-  document.getElementById("resumoEstoque").textContent=
-    "Produtos: "+produtos.length+" | Unidades em estoque: "+unidades;
+  const total = vendas.reduce(
+    (soma, v) => soma + Number(v.total || 0), 0
+  );
+  document.getElementById("totalVendido").textContent = dinheiro(total);
 
-  const filtrados=produtos.filter(p=>chaveNome(p.nome).includes(busca));
-  if(!filtrados.length){
-    const vazio=document.createElement("p");
-    vazio.className="muted";
-    vazio.textContent="Nenhum produto encontrado.";
-    lista.appendChild(vazio);
-  }
-
-  filtrados.forEach(p=>{
-    const item=document.createElement("div");
-    item.className="product";
-    const info=document.createElement("p");
-    info.textContent=p.nome+" — "+dinheiro(p.preco)+" | Estoque: "+p.estoque;
-    const botao=document.createElement("button");
-    botao.className="danger";
-    botao.textContent="Excluir produto";
-    botao.type="button";
-    botao.onclick=()=>{
-      if(vendas.some(v=>chaveNome(nomeVenda(v))===chaveNome(p.nome))){
-        alert("Esse produto tem vendas no histórico. Não é possível excluí-lo.");
-        return;
-      }
-      if(confirm("Deseja excluir "+p.nome+"?")){
-        produtos=produtos.filter(x=>x.id!==p.id);
-        salvar();
-        atualizar();
-      }
-    };
-    item.append(info,botao);
-    lista.appendChild(item);
+  const hoje = new Date().toLocaleDateString("sv-SE");
+  const vendasDeHoje = vendas.filter(v => {
+    if (v.dataISO) return v.dataISO.slice(0, 10) === hoje;
+    return v.data === new Date().toLocaleDateString("pt-BR");
   });
 
-  const seletor=document.getElementById("produtoVenda");
-  const anterior=seletor.value;
-  seletor.replaceChildren();
-  if(!produtos.length){
-    const op=document.createElement("option");
-    op.value="";
-    op.textContent="Cadastre um produto primeiro";
-    seletor.appendChild(op);
-  }else{
-    produtos.forEach(p=>{
-      const op=document.createElement("option");
-      op.value=String(p.id);
-      op.textContent=p.nome+" — "+dinheiro(p.preco)+" (Estoque: "+p.estoque+")";
-      op.disabled=p.estoque<1;
-      seletor.appendChild(op);
-    });
-    if(produtos.some(p=>String(p.id)===anterior))seletor.value=anterior;
-  }
-  atualizarPrevisao();
+  const totalHoje = vendasDeHoje.reduce(
+    (soma, v) => soma + Number(v.total || 0), 0
+  );
+  document.getElementById("vendasHoje").textContent = dinheiro(totalHoje);
 }
 
-function atualizarPrevisao(){
-  const id=document.getElementById("produtoVenda").value;
-  const p=produtos.find(x=>String(x.id)===id);
-  const qtdCampo=document.getElementById("quantidadeVenda");
-  const qtd=Number(qtdCampo.value);
-  const saida=document.getElementById("previsao");
-  if(!p){saida.textContent="Cadastre um produto para começar.";return;}
-  if(qtdCampo.value===""||!Number.isInteger(qtd)||qtd<1){
-    saida.textContent="Preço unitário: "+dinheiro(p.preco);
-    return;
-  }
-  saida.textContent="Total desta venda: "+dinheiro(p.preco*qtd);
-}
+function atualizarListaProdutos() {
+  const corpo = document.getElementById("listaProdutos");
+  const busca = document.getElementById("buscarProduto")
+    .value.trim().toLocaleLowerCase("pt-BR");
 
-function renderizarVendas(){
-  document.getElementById("totalGeral").textContent=
-    dinheiro(vendas.reduce((s,v)=>s+totalVenda(v),0));
-  document.getElementById("qtdGeral").textContent=vendas.length;
+  const filtrados = produtos.filter(p =>
+    p.nome.toLocaleLowerCase("pt-BR").includes(busca)
+  );
 
-  const hoje=dataLocalISO(new Date());
-  const deHoje=vendas.filter(v=>dataVendaISO(v)===hoje);
-  document.getElementById("totalHoje").textContent=
-    dinheiro(deHoje.reduce((s,v)=>s+totalVenda(v),0));
-  document.getElementById("qtdHoje").textContent=deHoje.length;
-
-  const historico=document.getElementById("historico");
-  historico.replaceChildren();
-  if(!vendas.length){
-    const vazio=document.createElement("p");
-    vazio.className="muted";
-    vazio.textContent="Nenhuma venda registrada ainda.";
-    historico.appendChild(vazio);
+  if (!filtrados.length) {
+    corpo.innerHTML = `<tr><td class="vazio" colspan="4">${
+      busca ? "Nenhum produto encontrado." : "Nenhum produto cadastrado."
+    }</td></tr>`;
     return;
   }
 
-  vendas.forEach(v=>{
-    const item=document.createElement("div");
-    item.className="sale";
-    const nome=document.createElement("strong");
-    nome.textContent=nomeVenda(v);
-    const detalhe=document.createElement("p");
-    detalhe.textContent="Quantidade: "+quantidadeVenda(v)+" × "+dinheiro(precoVenda(v));
-    const total=document.createElement("p");
-    total.textContent="Total: "+dinheiro(totalVenda(v));
-    const data=document.createElement("p");
-    data.className="muted";
-    data.textContent=v.data||v.dataVenda||v.dataHora||"Data não informada";
-    item.append(nome,detalhe,total,data);
-    historico.appendChild(item);
-  });
+  corpo.innerHTML = filtrados.map(p => {
+    const estoque = Number(p.estoque || 0);
+    return `<tr>
+      <td>${escaparHTML(p.nome)}</td>
+      <td><strong>${dinheiro(p.preco)}</strong></td>
+      <td class="${estoque <= 2 ? "estoque-baixo" : ""}">${estoque}</td>
+      <td>${dinheiro(Number(p.preco) * estoque)}</td>
+    </tr>`;
+  }).join("");
 }
 
-function atualizar(){
-  renderizarProdutos();
-  renderizarVendas();
+function atualizarOpcoesVenda() {
+  const seletor = document.getElementById("produtoVenda");
+  const anterior = seletor.value;
+  const disponiveis = produtos.filter(p => Number(p.estoque) > 0);
+
+  if (!disponiveis.length) {
+    seletor.innerHTML =
+      '<option value="">Nenhum produto com estoque disponível</option>';
+    document.getElementById("precoVenda").value = dinheiro(0);
+    return;
+  }
+
+  seletor.innerHTML =
+    '<option value="">Selecione um produto</option>' +
+    disponiveis.map(p =>
+      `<option value="${escaparHTML(p.id)}">${escaparHTML(p.nome)} — ${
+        dinheiro(p.preco)
+      } (estoque: ${p.estoque})</option>`
+    ).join("");
+
+  if (disponiveis.some(p => p.id === anterior)) {
+    seletor.value = anterior;
+  }
+  atualizarPrecoVenda();
 }
 
-document.getElementById("formProduto").addEventListener("submit",e=>{
-  e.preventDefault();
-  const nome=document.getElementById("nome").value.trim();
-  const precoCampo=document.getElementById("preco").value;
-  const estoqueCampo=document.getElementById("estoque").value;
-  const preco=Number(precoCampo);
-  const estoque=Number(estoqueCampo);
+function atualizarPrecoVenda() {
+  const id = document.getElementById("produtoVenda").value;
+  const produto = produtos.find(p => p.id === id);
+  document.getElementById("precoVenda").value =
+    produto ? dinheiro(produto.preco) : dinheiro(0);
+}
 
-  if(!nome||precoCampo===""||!Number.isFinite(preco)||preco<=0||
-     estoqueCampo===""||!Number.isInteger(estoque)||estoque<0){
-    alert("Preencha todos os campos corretamente.");
+function atualizarHistorico() {
+  const area = document.getElementById("historicoVendas");
+
+  if (!vendas.length) {
+    area.innerHTML = '<p class="vazio">Nenhuma venda registrada.</p>';
     return;
   }
-  if(produtos.some(p=>chaveNome(p.nome)===chaveNome(nome))){
-    alert("Esse produto já está cadastrado. Use a busca para localizá-lo.");
+
+  area.innerHTML = [...vendas].reverse().map(v => {
+    const nome = v.produto || v.nomeProduto || "Produto";
+    const quantidade = Number(v.quantidade || 0);
+    const preco = Number(v.precoUnitario ?? v.preco ?? 0);
+    const total = Number(v.total ?? quantidade * preco);
+
+    return `<div class="historico">
+      <strong>${escaparHTML(nome)} — ${dinheiro(total)}</strong>
+      <div>${quantidade} unidade(s) × ${dinheiro(preco)}</div>
+      <small>${escaparHTML(v.data || "")} ${escaparHTML(v.hora || "")}</small>
+    </div>`;
+  }).join("");
+}
+
+function atualizarTudo() {
+  atualizarResumo();
+  atualizarListaProdutos();
+  atualizarOpcoesVenda();
+  atualizarHistorico();
+}
+
+document.getElementById("formProduto").addEventListener("submit", evento => {
+  evento.preventDefault();
+
+  const nome = document.getElementById("nomeProduto").value.trim();
+  const preco = Number(document.getElementById("precoProduto").value);
+  const estoque = Number(document.getElementById("estoqueProduto").value);
+
+  if (!nome || !Number.isFinite(preco) || preco <= 0 ||
+      !Number.isInteger(estoque) || estoque < 0) {
+    mostrarMensagem("Confira o nome, o preço e a quantidade.", "erro");
     return;
   }
-  produtos.push({id:"produto-"+Date.now(),nome,preco,estoque});
-  salvar();
-  e.target.reset();
-  atualizar();
-  alert("Produto cadastrado com sucesso!");
-});
 
-document.getElementById("limpar").addEventListener("click",()=>{
+  const existente = produtos.find(p =>
+    p.nome.toLocaleLowerCase("pt-BR") === nome.toLocaleLowerCase("pt-BR") &&
+    Math.abs(Number(p.preco) - preco) < 0.005
+  );
+
+  if (existente) {
+    existente.estoque = Number(existente.estoque || 0) + estoque;
+    mostrarMensagem("Produto existente: estoque somado com sucesso.");
+  } else {
+    produtos.push({ id: criarId(), nome, preco, estoque });
+    mostrarMensagem("Produto cadastrado com sucesso.");
+  }
+
+  salvarDados();
+  atualizarTudo();
   document.getElementById("formProduto").reset();
-  document.getElementById("nome").focus();
+  document.getElementById("nomeProduto").focus();
 });
-document.getElementById("busca").addEventListener("input",renderizarProdutos);
-document.getElementById("produtoVenda").addEventListener("change",atualizarPrevisao);
-document.getElementById("quantidadeVenda").addEventListener("input",atualizarPrevisao);
 
-document.getElementById("registrar").addEventListener("click",()=>{
-  const p=produtos.find(x=>String(x.id)===document.getElementById("produtoVenda").value);
-  const campo=document.getElementById("quantidadeVenda");
-  const qtd=Number(campo.value);
-  const msg=document.getElementById("mensagem");
-  msg.className="";
-  msg.textContent="";
+document.getElementById("buscarProduto")
+  .addEventListener("input", atualizarListaProdutos);
 
-  if(!p){msg.textContent="Cadastre ou selecione um produto.";msg.className="warning";return;}
-  if(campo.value===""||!Number.isInteger(qtd)||qtd<1){
-    msg.textContent="Informe uma quantidade inteira maior que zero.";
-    msg.className="warning";return;
-  }
-  if(qtd>p.estoque){
-    msg.textContent="Estoque insuficiente. Disponível: "+p.estoque+".";
-    msg.className="warning";return;
+document.getElementById("produtoVenda")
+  .addEventListener("change", atualizarPrecoVenda);
+
+document.getElementById("formVenda").addEventListener("submit", evento => {
+  evento.preventDefault();
+
+  const id = document.getElementById("produtoVenda").value;
+  const quantidade = Number(document.getElementById("quantidadeVenda").value);
+  const produto = produtos.find(p => p.id === id);
+
+  if (!produto) {
+    mostrarMensagem("Selecione um produto disponível.", "erro");
+    return;
   }
 
-  const agora=new Date();
-  const total=Math.round(p.preco*qtd*100)/100;
-  p.estoque-=qtd;
-  vendas.unshift({
-    produto:p.nome,
-    quantidade:qtd,
-    precoUnitario:p.preco,
-    total:total,
-    data:agora.toLocaleString("pt-BR"),
-    dataISO:dataLocalISO(agora)
+  if (!Number.isInteger(quantidade) || quantidade < 1) {
+    mostrarMensagem("Informe uma quantidade inteira maior que zero.", "erro");
+    return;
+  }
+
+  if (quantidade > Number(produto.estoque)) {
+    mostrarMensagem("Estoque insuficiente para essa venda.", "erro");
+    return;
+  }
+
+  const agora = new Date();
+  const total = Number((Number(produto.preco) * quantidade).toFixed(2));
+
+  produto.estoque = Number(produto.estoque) - quantidade;
+
+  vendas.push({
+    produto: produto.nome,
+    quantidade,
+    precoUnitario: Number(produto.preco),
+    total,
+    data: agora.toLocaleDateString("pt-BR"),
+    hora: agora.toLocaleTimeString("pt-BR"),
+    dataISO: agora.toISOString()
   });
-  salvar();
-  campo.value="";
-  msg.textContent="Venda registrada com sucesso!";
-  atualizar();
+
+  salvarDados();
+  atualizarTudo();
+  document.getElementById("quantidadeVenda").value = "1";
+  mostrarMensagem("Venda registrada e estoque atualizado.");
 });
 
+// Inicialização: corrige os cadastros antigos duplicados.
 consolidarDuplicados();
-atualizar();
+atualizarTudo();
 </script>
 </body>
 </html>
